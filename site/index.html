@@ -368,6 +368,50 @@ body {
 }
 /* end @scope */
 
+/* @scope: Download Bar */
+.dl-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  padding: var(--sp-md);
+  background: var(--c-bg-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r);
+  margin-bottom: var(--sp-xl);
+}
+.dl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-xs);
+  padding: var(--sp-xs) var(--sp-md);
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  color: var(--c-txt);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--m);
+}
+.dl-btn:hover {
+  border-color: var(--c-pri);
+  color: var(--c-pri);
+}
+.dl-btn-accent {
+  background: var(--c-pri);
+  border-color: var(--c-pri);
+  color: white;
+}
+.dl-btn-accent:hover {
+  background: #1e40af;
+  color: white;
+}
+.dl-btn-sm {
+  font-size: 0.8rem;
+  padding: var(--sp-xs) var(--sp-sm);
+}
+/* end @scope */
+
 /* @scope: Footer */
 .footer {
   background: var(--c-bg-2);
@@ -536,10 +580,38 @@ const loadPage=async(page)=>{
   }
 };
 
+// @contract: (page:string) -> string|null
+// @pure: true
+const pageToFile=(page)=>{
+  const map={
+    overview:null,
+    philosophy:null,
+    conventions:null,
+    extension:null,
+    reference:null,
+    typescript:'AOCS-typescript.md',
+    javascript:'AOCS-javascript.md',
+    html:'AOCS-html.md',
+    css:'AOCS-css.md'
+  };
+  return map[page]??null;
+};
+
 // @contract: (md:string) -> void
 // @pure: false
 const renderContent=(md)=>{
-  const html=md2html(md);
+  let html=md2html(md);
+  // Add download bar for language pages
+  const file=pageToFile(st.page);
+  if(file||st.page==='overview'){
+    const baseBtn='<button class="dl-btn" data-action="download" data-file="AOCS.md">📄 AOCS.md (base)</button>';
+    const langBtn=file?`<button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button>`:'';
+    const langBtns=st.page==='overview'?
+      ['AOCS-typescript.md','AOCS-javascript.md','AOCS-html.md','AOCS-css.md'].map(f=>
+        `<button class="dl-btn dl-btn-sm" data-action="download" data-file="${f}">📄 ${f}</button>`
+      ).join(''):'';
+    html=`<div class="dl-bar">${baseBtn}${langBtn}${langBtns}</div>${html}`;
+  }
   document.getElementById('content').innerHTML=html;
   updateNav();
   // Setup internal page link handlers
@@ -547,9 +619,15 @@ const renderContent=(md)=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
       const page=el.getAttribute('data-page');
-      if(page){
-        navigateTo(page);
-      }
+      if(page) navigateTo(page);
+    });
+  });
+  // Setup download link handlers
+  document.querySelectorAll('[data-action="download"]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      const file=el.getAttribute('data-file');
+      if(file) downloadFile(file);
     });
   });
 };
@@ -583,11 +661,16 @@ const md2html=(md)=>{
   html=html.replace(/\*([^*]+)\*/g,'<em>$1</em>');
   // Links
   html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,txt,href)=>{
+    // Handle download links
+    if(href.startsWith('/download/')){
+      const file=href.replace('/download/','');
+      return`<a href="#" data-action="download" data-file="${file}" class="page-link">${txt}</a>`;
+    }
     // Handle internal page links
     if(href.startsWith('/')){
       return`<a href="${href}" data-page="${href.slice(1)}" class="page-link">${txt}</a>`;
     }
-    return`<a href="${href}">${txt}</a>`;
+    return`<a href="${href}" target="_blank">${txt}</a>`;
   });
   // Lists
   html=html.replace(/^\- (.+)$/gim,'<li>$1</li>');
@@ -672,6 +755,25 @@ const updateNav=()=>{
       link.setAttribute('data-state',page===st.page?'active':'');
     }
   });
+};
+
+// @contract: (filename:string) -> Promise<void>
+// @throws: never
+// @pure: false
+const downloadFile=async(filename)=>{
+  try{
+    const res=await fetch(`../docs/standard/${filename}`);
+    const txt=await res.text();
+    const blob=new Blob([txt],{type:'text/markdown'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }catch(e){
+    console.error('Download failed:',e);
+  }
 };
 
 // @contract: (page:string) -> void
