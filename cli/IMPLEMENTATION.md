@@ -112,7 +112,7 @@ Summary: 0 passed, 1 failed, 0 warnings
 
 1. **Zero Dependencies**: Uses only Node.js built-ins (fs, path, readline)
 2. **ES Modules**: All files use `import`/`export`
-3. **AOCS-Compliant**: Every source file follows AOCS v0.7
+3. **AOCS-Compliant**: Every source file follows AOCS v0.8
 4. **Pragmatic Parsing**: Regex-based heuristics (not full AST parsing)
 5. **Pluggable Architecture**: Language plugins register dynamically
 

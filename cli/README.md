@@ -1,6 +1,6 @@
 # AOCS Validator
 
-Official linter and validator for the [Agent-Oriented Coding Standard](https://github.com/spuddermax/aocs) (AOCS v0.7).
+Official linter and validator for the [Agent-Oriented Coding Standard](https://github.com/spuddermax/aocs) (AOCS v0.8).
 
 ## Installation
 

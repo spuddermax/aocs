@@ -80,7 +80,7 @@ Every AOCS-compliant repo includes an `aocs.json` at root — a machine-parseabl
 
 ```json
 {
-  "aocsVersion": "0.7",
+  "aocsVersion": "0.8",
   "languages": ["typescript"],
   "modulePattern": "agent-module",
   "stateOwnership": "local-only",

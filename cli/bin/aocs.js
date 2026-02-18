@@ -31,7 +31,7 @@ async function getVersion() {
 // @pure: true
 function showHelp() {
   console.log(`
-AOCS Validator v0.7.0
+AOCS Validator v0.8.0
 
 Usage:
   aocs validate [path]     Validate an AOCS project (default: current directory)
@@ -80,7 +80,7 @@ async function initProject() {
   }
   
   const config = {
-    aocsVersion: '0.7',
+    aocsVersion: '0.8',
     languages,
     mode,
     forbiddenPatterns: ['dynamic-eval', 'implicit-global']
@@ -88,7 +88,7 @@ async function initProject() {
   
   const readme = `# Agent Context — ${name}
 
-This repo follows AOCS v0.7. See aocs.json for constraints.
+This repo follows AOCS v0.8. See aocs.json for constraints.
 
 ## Rules
 - File roles declared via AOCS-ROLE in first 5 lines

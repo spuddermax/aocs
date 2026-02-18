@@ -203,6 +203,10 @@ body {
   background: none; border: none; width: 100%; text-align: left;
 }
 .rs-file:hover { color: var(--c-pri); background: var(--c-bg-2); }
+.rs-collapsible { display: flex; align-items: center; gap: var(--sp-xs); user-select: none; }
+.rs-chevron { transition: transform var(--m); }
+.rs-collapsible-body[data-state="collapsed"] { display: none; }
+.rs-collapsible-body[data-state="expanded"] { display: block; }
 /* end @scope */
 
 /* @scope: Content */
@@ -356,15 +360,19 @@ body {
     <div class="rs-title" style="margin-top:var(--sp-md);">v0.8 Files</div>
     <button class="rs-file" data-action="download" data-file="aocs-schema.json"><i data-lucide="file-text" class="btn-icon"></i>aocs-schema.json</button>
     <button class="rs-file" data-action="download" data-file="README.agent.md"><i data-lucide="file-text" class="btn-icon"></i>README.agent.md</button>
-    <div class="rs-title" style="margin-top:var(--sp-md);">Add Languages</div>
-    <button class="rs-file" data-action="download" data-file="AOCS-typescript.md"><i data-lucide="file-text" class="btn-icon"></i>TypeScript</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-javascript.md"><i data-lucide="file-text" class="btn-icon"></i>JavaScript</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-python.md"><i data-lucide="file-text" class="btn-icon"></i>Python</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-go.md"><i data-lucide="file-text" class="btn-icon"></i>Go</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-rust.md"><i data-lucide="file-text" class="btn-icon"></i>Rust</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-html.md"><i data-lucide="file-text" class="btn-icon"></i>HTML</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-css.md"><i data-lucide="file-text" class="btn-icon"></i>CSS</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md"><i data-lucide="file-text" class="btn-icon"></i>Extension Protocol</button>
+    <div class="rs-title rs-collapsible" id="lang-toggle" data-action="toggle-langs" style="margin-top:var(--sp-md);cursor:pointer;">
+      <i data-lucide="chevron-right" class="rs-chevron btn-icon" id="lang-chevron"></i>Add Languages
+    </div>
+    <div class="rs-collapsible-body" id="lang-list" data-state="collapsed">
+      <button class="rs-file" data-action="download" data-file="AOCS-typescript.md"><i data-lucide="file-text" class="btn-icon"></i>TypeScript</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-javascript.md"><i data-lucide="file-text" class="btn-icon"></i>JavaScript</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-python.md"><i data-lucide="file-text" class="btn-icon"></i>Python</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-go.md"><i data-lucide="file-text" class="btn-icon"></i>Go</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-rust.md"><i data-lucide="file-text" class="btn-icon"></i>Rust</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-html.md"><i data-lucide="file-text" class="btn-icon"></i>HTML</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-css.md"><i data-lucide="file-text" class="btn-icon"></i>CSS</button>
+      <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md"><i data-lucide="file-text" class="btn-icon"></i>Extension Protocol</button>
+    </div>
   </div>
   <div class="rs-section" id="toc-section" style="display:none;">
     <div class="rs-title">On This Page</div>
@@ -688,6 +696,14 @@ const init=()=>{
       const p=el.getAttribute('data-page');
       if(p) navigateTo(p);
     });
+  });
+  // Collapsible language list
+  document.getElementById('lang-toggle')?.addEventListener('click',()=>{
+    const list=document.getElementById('lang-list');
+    const chevron=document.getElementById('lang-chevron');
+    const expanded=list.getAttribute('data-state')==='expanded';
+    list.setAttribute('data-state',expanded?'collapsed':'expanded');
+    chevron.style.transform=expanded?'':'rotate(90deg)';
   });
   // Right sidebar download buttons
   document.querySelectorAll('.right-sidebar [data-action="download"]').forEach(el=>{
