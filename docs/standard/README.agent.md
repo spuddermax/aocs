@@ -1,6 +1,6 @@
 # Agent Context — [Project Name]
 
-This repo follows AOCS v0.7. See `aocs.json` for machine-readable constraints.
+This repo follows AOCS v0.8. See `aocs.json` for machine-readable constraints.
 
 ## Rules
 - No implicit state mutation

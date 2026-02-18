@@ -169,7 +169,7 @@ Every AOCS-compliant repo includes an `aocs.json` at root — a machine-parseabl
 }
 ```
 
-This eliminates the need for agents to infer rules from prose. System prompts can simply say "Follow AOCS v0.7; see aocs.json for constraints." The contract enables agent pre-flight validation before code edits.
+This eliminates the need for agents to infer rules from prose. System prompts can simply say "Follow AOCS v0.8; see aocs.json for constraints." The contract enables agent pre-flight validation before code edits.
 
 Agents load `aocs.json` first, verify compatibility, then proceed with mechanical enforcement of declared constraints. No interpretation required.
 
@@ -255,7 +255,7 @@ Include this list in `aocs.json` under `forbiddenPatterns`. Agents check before 
 Every AOCS repo includes a `README.agent.md` (≤200 tokens) that can be injected verbatim into system prompts:
 
 ```markdown
-This repo follows AOCS v0.7.
+This repo follows AOCS v0.8.
 - No implicit state
 - All state changes in *.state.ts files
 - Pure functions only elsewhere  

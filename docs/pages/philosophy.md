@@ -41,7 +41,7 @@ Agents replicate existing patterns, including bad ones. Mechanical enforcement (
 
 ## From Style Guide to Low-Entropy IR
 
-AOCS v0.7 marks a fundamental shift: from **style guide** to **low-entropy intermediate representation for code**.
+AOCS v0.7 marked a fundamental shift: from **style guide** to **low-entropy intermediate representation for code**.
 
 Traditional style guides optimize for human aesthetics — indentation, naming conventions, comment placement. They assume code is read linearly, top-to-bottom, with gradual comprehension.
 
@@ -49,7 +49,7 @@ Traditional style guides optimize for human aesthetics — indentation, naming c
 
 LLMs parse structurally, hold entire modules in context simultaneously, and reason through pattern-matching across thousands of tokens. They don't need "readable" code — they need **parseable contracts** and **constrained solution spaces**.
 
-AOCS v0.7 reframes code as a **human-writable DSL optimized for LLM cognition**:
+AOCS v0.7 reframed code as a **human-writable DSL optimized for LLM cognition**:
 
 - `aocs.json` provides a **mechanical contract** agents load before reasoning about code
 - `AOCS-ROLE` declarations **partition the solution space** by file purpose

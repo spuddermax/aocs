@@ -94,7 +94,7 @@ Every AOCS-compliant repo includes an `aocs.json` at root — a machine-parseabl
 
 **Why it matters:**
 
-System prompts can simply say "Follow AOCS v0.7; see aocs.json for constraints." Agents load the contract first, verify compatibility, then proceed with mechanical enforcement. No interpretation required.
+System prompts can simply say "Follow AOCS v0.8; see aocs.json for constraints." Agents load the contract first, verify compatibility, then proceed with mechanical enforcement. No interpretation required.
 
 The contract enables pre-flight validation: agents check forbidden patterns before generating code, validate naming schemas before committing, and ensure edit-locality by comparing changed files against declared roles.
 
@@ -274,7 +274,7 @@ Every AOCS repo includes a `README.agent.md` (≤200 tokens) that can be injecte
 ```markdown
 # Agent Context — [Project Name]
 
-This repo follows AOCS v0.7. See `aocs.json` for machine-readable constraints.
+This repo follows AOCS v0.8. See `aocs.json` for machine-readable constraints.
 
 ## Rules
 - No implicit state mutation
