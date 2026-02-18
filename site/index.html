@@ -393,9 +393,14 @@ body {
 /* Syntax highlighting */
 .hljs-keyword { color: #c792ea; }
 .hljs-string { color: #c3e88d; }
-.hljs-comment { color: #697098; }
+.hljs-comment { color: #697098; font-style: italic; }
 .hljs-function { color: #82aaff; }
 .hljs-number { color: #f78c6c; }
+[data-theme="light"] .hljs-keyword { color: #7c3aed; }
+[data-theme="light"] .hljs-string { color: #16a34a; }
+[data-theme="light"] .hljs-comment { color: #9ca3af; }
+[data-theme="light"] .hljs-function { color: #2563eb; }
+[data-theme="light"] .hljs-number { color: #ea580c; }
 </style>
 </head>
 <body class="layout">
@@ -536,7 +541,6 @@ const loadPage=async(page)=>{
 const renderContent=(md)=>{
   const html=md2html(md);
   document.getElementById('content').innerHTML=html;
-  highlightCode();
   updateNav();
   // Setup internal page link handlers
   document.querySelectorAll('.page-link').forEach(el=>{
@@ -559,9 +563,17 @@ const md2html=(md)=>{
   html=html.replace(/^### (.*$)/gim,(m,txt)=>`<h3 id="${slugify(txt)}">${txt}</h3>`);
   html=html.replace(/^## (.*$)/gim,(m,txt)=>`<h2 id="${slugify(txt)}">${txt}</h2>`);
   html=html.replace(/^# (.*$)/gim,(m,txt)=>`<h1>${txt}</h1>`);
-  // Code blocks
+  // Code blocks — highlight during parse, not after DOM insertion
   html=html.replace(/```(\w+)?\n([\s\S]*?)```/g,(m,lang,code)=>{
-    return`<pre><code class="language-${lang||'text'}">${escHtml(code)}</code></pre>`;
+    let esc=escHtml(code);
+    if(lang==='typescript'||lang==='javascript'||lang==='js'||lang==='ts'){
+      esc=hlJS(esc);
+    }else if(lang==='css'){
+      esc=hlCSS(esc);
+    }else if(lang==='html'){
+      esc=hlHTML(esc);
+    }
+    return`<pre><code class="language-${lang||'text'}">${esc}</code></pre>`;
   });
   // Inline code
   html=html.replace(/`([^`]+)`/g,'<code>$1</code>');
@@ -616,20 +628,39 @@ const slugify=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]
 // @pure: true
 const escHtml=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 
-// @contract: () -> void
-// @pure: false
-const highlightCode=()=>{
-  document.querySelectorAll('pre code').forEach(block=>{
-    const lang=block.className.replace('language-','');
-    if(lang==='typescript'||lang==='javascript'){
-      block.innerHTML=block.innerHTML
-        .replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default)\b/g,'<span class="hljs-keyword">$1</span>')
-        .replace(/'([^']*)'/g,'<span class="hljs-string">\'$1\'</span>')
-        .replace(/"([^"]*)"/g,'<span class="hljs-string">"$1"</span>')
-        .replace(/\/\/(.+)$/gm,'<span class="hljs-comment">//$1</span>')
-        .replace(/\b(\d+)\b/g,'<span class="hljs-number">$1</span>');
-    }
-  });
+// @contract: (escaped:string) -> string
+// @pure: true
+// Highlights JS/TS — input is already HTML-escaped so no attribute collisions
+const hlJS=(s)=>{
+  // Comments first (greedy, protects content from other passes)
+  s=s.replace(/(\/\/.*)$/gm,'<span class="hljs-comment">$1</span>');
+  // Strings (escaped quotes: &#039; and &quot;)
+  s=s.replace(/(&#039;[^]*?&#039;)/g,'<span class="hljs-string">$1</span>');
+  s=s.replace(/(&quot;[^]*?&quot;)/g,'<span class="hljs-string">$1</span>');
+  // Keywords (word-boundary safe)
+  s=s.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default|new|throw|typeof|void|null|undefined|true|false|Promise)\b/g,'<span class="hljs-keyword">$1</span>');
+  // Numbers
+  s=s.replace(/\b(\d+\.?\d*)\b/g,'<span class="hljs-number">$1</span>');
+  return s;
+};
+
+// @contract: (escaped:string) -> string
+// @pure: true
+const hlCSS=(s)=>{
+  s=s.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="hljs-comment">$1</span>');
+  s=s.replace(/(--[\w-]+)/g,'<span class="hljs-keyword">$1</span>');
+  s=s.replace(/\b(\d+\.?\d*(px|rem|em|%|ms|s|vh|vw)?)\b/g,'<span class="hljs-number">$1</span>');
+  s=s.replace(/(#[0-9a-fA-F]{3,8})\b/g,'<span class="hljs-string">$1</span>');
+  return s;
+};
+
+// @contract: (escaped:string) -> string
+// @pure: true
+const hlHTML=(s)=>{
+  s=s.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="hljs-comment">$1</span>');
+  s=s.replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="hljs-keyword">$2</span>');
+  s=s.replace(/([\w-]+)=(&quot;[^]*?&quot;)/g,'<span class="hljs-function">$1</span>=<span class="hljs-string">$2</span>');
+  return s;
 };
 
 // @contract: () -> void
