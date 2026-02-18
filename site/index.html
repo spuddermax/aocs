@@ -601,16 +601,12 @@ const pageToFile=(page)=>{
 // @pure: false
 const renderContent=(md)=>{
   let html=md2html(md);
-  // Add download bar for language pages
+  // Add download bar only on pages with a downloadable file
   const file=pageToFile(st.page);
-  if(file||st.page==='overview'){
+  if(file){
     const baseBtn='<button class="dl-btn" data-action="download" data-file="AOCS.md">📄 AOCS.md (base)</button>';
-    const langBtn=file?`<button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button>`:'';
-    const langBtns=st.page==='overview'?
-      ['AOCS-typescript.md','AOCS-javascript.md','AOCS-html.md','AOCS-css.md'].map(f=>
-        `<button class="dl-btn dl-btn-sm" data-action="download" data-file="${f}">📄 ${f}</button>`
-      ).join(''):'';
-    html=`<div class="dl-bar">${baseBtn}${langBtn}${langBtns}</div>${html}`;
+    const langBtn=`<button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button>`;
+    html=`<div class="dl-bar">${baseBtn}${langBtn}</div>${html}`;
   }
   document.getElementById('content').innerHTML=html;
   updateNav();
