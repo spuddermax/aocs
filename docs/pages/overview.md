@@ -78,6 +78,7 @@ Grab the **base standard** plus the language files for your stack:
 - **[AOCS-javascript.md](/download/AOCS-javascript.md)** — JavaScript
 - **[AOCS-html.md](/download/AOCS-html.md)** — HTML
 - **[AOCS-css.md](/download/AOCS-css.md)** — CSS
+- **[AOCS-extension-protocol.md](/download/AOCS-extension-protocol.md)** — Create your own language definition
 
 ### 2. Drop them in your project
 

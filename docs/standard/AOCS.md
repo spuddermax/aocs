@@ -155,54 +155,22 @@ Teams should implement linters/CI checks that:
 
 ## Part III: Language Extension Protocol
 
-To add a new language to AOCS, follow this bootstrap algorithm.
+To add AOCS support for a language not already covered, use the **Extension Protocol**:
 
-### Step 1: Map Core Concepts
+📄 **[AOCS-extension-protocol.md](./AOCS-extension-protocol.md)**
 
-For each universal convention (U1-U7), identify the language's native idiom:
+This standalone file contains the complete blueprint for creating a new `AOCS-{language}.md` file, including:
 
-| Concept | Check if language has... | Fallback |
-|---------|--------------------------|----------|
-| Contracts | Type system, decorators, assertions | Structured comments |
-| Modules | Native module system | File-level comment headers |
-| State | Class/struct fields, closure scope | Comment manifest |
-| Errors | Typed exceptions or Result types | Enum or comment declaration |
-| Naming | Conventional short names (i, x, acc) | Abbreviate common terms |
+1. **Map universal conventions** (U1-U7) to the language's native idioms
+2. **Define compression idioms** specific to the language
+3. **Specify exceptions** (what stays human-readable)
+4. **Provide examples** with token counts and savings percentages
+5. **Write a quick reference** block
+6. **Validate** the resulting file
 
-### Step 2: Define Compression Idioms
+The protocol includes a worked Python example showing the complete output.
 
-Identify language-specific patterns for brevity:
-
-- Ternary operators, arrow functions, comprehensions
-- Operator overloading, pipeline operators
-- Native functional methods (map/reduce/filter equivalents)
-
-### Step 3: Specify Exceptions
-
-What stays human-readable regardless of compression:
-
-- Public API signatures and exports
-- Test descriptions and assertions
-- Error messages
-- Git commit messages and PR descriptions
-
-### Step 4: Provide Examples
-
-For each example, show:
-
-1. Human-optimized version with token count
-2. Agent-optimized version with token count
-3. Percentage savings
-
-### Step 5: Validate
-
-Before adopting a language extension, verify:
-
-- [ ] All seven universal conventions (U1-U7) mapped
-- [ ] Compression idioms preserve correctness
-- [ ] Exceptions clearly documented
-- [ ] Examples demonstrate measurable token savings
-- [ ] File follows the `AOCS-{language}.md` naming convention
+Drop `AOCS-extension-protocol.md` into your project alongside this file so agents can bootstrap new language definitions autonomously.
 
 ---
 
@@ -223,10 +191,11 @@ ERRORS:       Typed in contracts, agents reason about failure paths statically
 
 ```
 your-project/
-├── AGENTS.md              ← references docs/AOCS*.md
+├── AGENTS.md                      ← references docs/AOCS*.md
 ├── docs/
-│   ├── AOCS.md            ← this file (base standard)
-│   ├── AOCS-typescript.md ← language-specific
+│   ├── AOCS.md                    ← this file (base standard)
+│   ├── AOCS-extension-protocol.md ← how to add new languages
+│   ├── AOCS-typescript.md         ← language-specific
 │   ├── AOCS-javascript.md
 │   ├── AOCS-html.md
 │   └── AOCS-css.md
