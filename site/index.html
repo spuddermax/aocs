@@ -57,6 +57,10 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 32px;
+}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
@@ -165,6 +169,7 @@ body {
   background: var(--c-pri);
   color: white;
   font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .nav-link-sub {
   padding-left: var(--sp-lg);
@@ -407,27 +412,22 @@ body {
   </div>
   <nav class="sidebar-nav" id="nav">
     <div class="nav-section">
-      <div class="nav-section-title">Introduction</div>
-      <a href="#overview" class="nav-link" data-action="navigate">Overview</a>
-      <a href="#quick-start" class="nav-link" data-action="navigate">Quick Start</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-section-title">Core</div>
-      <a href="#philosophy" class="nav-link" data-action="navigate">Philosophy</a>
-      <a href="#conventions" class="nav-link" data-action="navigate">Universal Conventions</a>
-      <a href="#extension" class="nav-link" data-action="navigate">Extension Protocol</a>
+      <div class="nav-section-title">Standard</div>
+      <a href="#part-i--core-philosophy" class="nav-link" data-action="navigate">Part I: Core Philosophy</a>
+      <a href="#part-ii--universal-conventions" class="nav-link" data-action="navigate">Part II: Universal Conventions</a>
+      <a href="#part-iii--language-extension-protocol" class="nav-link" data-action="navigate">Part III: Extension Protocol</a>
+      <a href="#part-iv--language-definitions" class="nav-link" data-action="navigate">Part IV: Language Definitions</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Languages</div>
-      <a href="#typescript" class="nav-link" data-action="navigate">TypeScript</a>
-      <a href="#javascript" class="nav-link" data-action="navigate">JavaScript</a>
-      <a href="#html" class="nav-link" data-action="navigate">HTML</a>
-      <a href="#css" class="nav-link" data-action="navigate">CSS</a>
+      <a href="#41-typescript" class="nav-link nav-link-sub" data-action="navigate">4.1 TypeScript</a>
+      <a href="#42-javascript----state-and-behavior" class="nav-link nav-link-sub" data-action="navigate">4.2 JavaScript</a>
+      <a href="#43-html----structure-and-semantics" class="nav-link nav-link-sub" data-action="navigate">4.3 HTML</a>
+      <a href="#44-css----design-tokens-and-scope" class="nav-link nav-link-sub" data-action="navigate">4.4 CSS</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Resources</div>
-      <a href="#examples" class="nav-link" data-action="navigate">Examples</a>
-      <a href="#reference" class="nav-link" data-action="navigate">Quick Reference</a>
+      <a href="#quick-reference" class="nav-link" data-action="navigate">Quick Reference</a>
       <a href="https://github.com/spuddermax/aocs" class="nav-link" target="_blank">GitHub ↗</a>
     </div>
   </nav>
@@ -560,10 +560,11 @@ const renderContent=(md)=>{
 // @pure: true
 const md2html=(md)=>{
   let html=md;
-  // Headers
-  html=html.replace(/^### (.*$)/gim,'<h3>$1</h3>');
-  html=html.replace(/^## (.*$)/gim,'<h2 id="'+slugify('$1')+'">$1</h2>');
-  html=html.replace(/^# (.*$)/gim,'<h1>$1</h1>');
+  // Headers with IDs
+  html=html.replace(/^#### (.*$)/gim,(m,txt)=>`<h4 id="${slugify(txt)}">${txt}</h4>`);
+  html=html.replace(/^### (.*$)/gim,(m,txt)=>`<h3 id="${slugify(txt)}">${txt}</h3>`);
+  html=html.replace(/^## (.*$)/gim,(m,txt)=>`<h2 id="${slugify(txt)}">${txt}</h2>`);
+  html=html.replace(/^# (.*$)/gim,(m,txt)=>`<h1>${txt}</h1>`);
   // Code blocks
   html=html.replace(/```(\w+)?\n([\s\S]*?)```/g,(m,lang,code)=>{
     return`<pre><code class="language-${lang||'text'}">${escHtml(code)}</code></pre>`;
@@ -609,7 +610,7 @@ const md2html=(md)=>{
 
 // @contract: (str:string) -> string
 // @pure: true
-const slugify=(s)=>s.toLowerCase().replace(/[^\w]+/g,'-');
+const slugify=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,'');
 
 // @contract: (str:string) -> string
 // @pure: true
@@ -644,12 +645,31 @@ const updateNav=()=>{
   });
 };
 
+// @contract: () -> void
+// @pure: false
+const scrollSpy=()=>{
+  const sections=document.querySelectorAll('h2[id], h3[id]');
+  let current='';
+  sections.forEach(section=>{
+    const rect=section.getBoundingClientRect();
+    if(rect.top<=100){
+      current=section.id;
+    }
+  });
+  if(current&&window.location.hash.slice(1)!==current){
+    history.replaceState(null,null,'#'+current);
+    updateNav();
+  }
+};
+
 // @contract: (id:string) -> void
 // @pure: false
 const navigate=(id)=>{
   const el=document.getElementById(id);
   if(el){
-    el.scrollIntoView({behavior:'smooth',block:'start'});
+    const offset=32;
+    const elPos=el.getBoundingClientRect().top+window.pageYOffset-offset;
+    window.scrollTo({top:elPos,behavior:'smooth'});
     window.location.hash=id;
     updateNav();
     if(window.innerWidth<=768){
@@ -675,6 +695,24 @@ const init=()=>{
     });
   });
   window.addEventListener('hashchange',updateNav);
+  // Scroll spy with throttling
+  let ticking=false;
+  window.addEventListener('scroll',()=>{
+    if(!ticking){
+      window.requestAnimationFrame(()=>{
+        scrollSpy();
+        ticking=false;
+      });
+      ticking=true;
+    }
+  });
+  // Handle initial hash on page load
+  setTimeout(()=>{
+    if(window.location.hash){
+      const id=window.location.hash.slice(1);
+      navigate(id);
+    }
+  },500);
 };
 
 // Run on load
