@@ -413,21 +413,21 @@ body {
   <nav class="sidebar-nav" id="nav">
     <div class="nav-section">
       <div class="nav-section-title">Standard</div>
-      <a href="#part-i--core-philosophy" class="nav-link" data-action="navigate">Part I: Core Philosophy</a>
-      <a href="#part-ii--universal-conventions" class="nav-link" data-action="navigate">Part II: Universal Conventions</a>
-      <a href="#part-iii--language-extension-protocol" class="nav-link" data-action="navigate">Part III: Extension Protocol</a>
-      <a href="#part-iv--language-definitions" class="nav-link" data-action="navigate">Part IV: Language Definitions</a>
+      <a href="/" class="nav-link" data-page="overview">Overview</a>
+      <a href="/philosophy" class="nav-link" data-page="philosophy">Part I: Philosophy</a>
+      <a href="/conventions" class="nav-link" data-page="conventions">Part II: Conventions</a>
+      <a href="/extension" class="nav-link" data-page="extension">Part III: Extension</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Languages</div>
-      <a href="#41-typescript" class="nav-link nav-link-sub" data-action="navigate">4.1 TypeScript</a>
-      <a href="#42-javascript----state-and-behavior" class="nav-link nav-link-sub" data-action="navigate">4.2 JavaScript</a>
-      <a href="#43-html----structure-and-semantics" class="nav-link nav-link-sub" data-action="navigate">4.3 HTML</a>
-      <a href="#44-css----design-tokens-and-scope" class="nav-link nav-link-sub" data-action="navigate">4.4 CSS</a>
+      <a href="/typescript" class="nav-link" data-page="typescript">TypeScript</a>
+      <a href="/javascript" class="nav-link" data-page="javascript">JavaScript</a>
+      <a href="/html" class="nav-link" data-page="html">HTML</a>
+      <a href="/css" class="nav-link" data-page="css">CSS</a>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Resources</div>
-      <a href="#quick-reference" class="nav-link" data-action="navigate">Quick Reference</a>
+      <a href="/reference" class="nav-link" data-page="reference">Quick Reference</a>
       <a href="https://github.com/spuddermax/aocs" class="nav-link" target="_blank">GitHub ↗</a>
     </div>
   </nav>
@@ -449,27 +449,8 @@ body {
   </div>
 
   <div class="content-wrapper">
-    <header class="header">
-      <h1>Agent-Oriented Coding Standard</h1>
-      <p>Write code optimized for AI agents. Save tokens. Ship faster.</p>
-      <div class="stats">
-        <div class="stat">
-          <span class="stat-num">25-40%</span>
-          <span class="stat-label">Token Savings</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">40-60%</span>
-          <span class="stat-label">Context Reduction</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">v0.6</span>
-          <span class="stat-label">Current Version</span>
-        </div>
-      </div>
-    </header>
-
     <article class="content" id="content">
-      <p style="text-align: center; color: var(--c-txt-dim);">Loading standard...</p>
+      <p style="text-align: center; color: var(--c-txt-dim);">Loading...</p>
     </article>
 
     <footer class="footer">
@@ -488,11 +469,11 @@ body {
 
 // @state-manifest: {
 //   theme: 'dark'|'light',
-//   currentSection: string,
+//   currentPage: string,
 //   sidebarOpen: boolean,
 //   content: string
 // }
-const st={theme:'dark',sec:'',sidebarOpen:false,content:''};
+const st={theme:'dark',page:'overview',sidebarOpen:false,content:''};
 
 // @contract: () -> void
 // @pure: false
@@ -533,17 +514,20 @@ const toggleMenu=()=>{
   document.getElementById('sidebar').setAttribute('data-state',st.sidebarOpen?'open':'closed');
 };
 
-// @contract: () -> Promise<void>
+// @contract: (page:string) -> Promise<void>
 // @throws: never
 // @pure: false
-const loadStd=async()=>{
+const loadPage=async(page)=>{
   try{
-    const res=await fetch('../docs/AOCS.md');
+    const res=await fetch(`../docs/pages/${page}.md`);
+    if(!res.ok)throw new Error('Page not found');
     const txt=await res.text();
     st.content=txt;
+    st.page=page;
     renderContent(txt);
+    updateNav();
   }catch(e){
-    document.getElementById('content').innerHTML='<p style="color: #ef4444;">Failed to load standard. <a href="../docs/AOCS.md">View directly</a></p>';
+    document.getElementById('content').innerHTML=`<p style="color: #ef4444;">Page not found. <a href="/">Return to overview</a></p>`;
   }
 };
 
@@ -554,6 +538,16 @@ const renderContent=(md)=>{
   document.getElementById('content').innerHTML=html;
   highlightCode();
   updateNav();
+  // Setup internal page link handlers
+  document.querySelectorAll('.page-link').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      const page=el.getAttribute('data-page');
+      if(page){
+        navigateTo(page);
+      }
+    });
+  });
 };
 
 // @contract: (md:string) -> string
@@ -576,7 +570,13 @@ const md2html=(md)=>{
   // Italic
   html=html.replace(/\*([^*]+)\*/g,'<em>$1</em>');
   // Links
-  html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2">$1</a>');
+  html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,txt,href)=>{
+    // Handle internal page links
+    if(href.startsWith('/')){
+      return`<a href="${href}" data-page="${href.slice(1)}" class="page-link">${txt}</a>`;
+    }
+    return`<a href="${href}">${txt}</a>`;
+  });
   // Lists
   html=html.replace(/^\- (.+)$/gim,'<li>$1</li>');
   html=html.replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>');
@@ -635,46 +635,22 @@ const highlightCode=()=>{
 // @contract: () -> void
 // @pure: false
 const updateNav=()=>{
-  const hash=window.location.hash.slice(1);
   document.querySelectorAll('.nav-link').forEach(link=>{
-    const href=link.getAttribute('href');
-    if(href&&href.startsWith('#')){
-      const id=href.slice(1);
-      link.setAttribute('data-state',id===hash?'active':'');
+    const page=link.getAttribute('data-page');
+    if(page){
+      link.setAttribute('data-state',page===st.page?'active':'');
     }
   });
 };
 
-// @contract: () -> void
+// @contract: (page:string) -> void
 // @pure: false
-const scrollSpy=()=>{
-  const sections=document.querySelectorAll('h2[id], h3[id]');
-  let current='';
-  sections.forEach(section=>{
-    const rect=section.getBoundingClientRect();
-    if(rect.top<=100){
-      current=section.id;
-    }
-  });
-  if(current&&window.location.hash.slice(1)!==current){
-    history.replaceState(null,null,'#'+current);
-    updateNav();
-  }
-};
-
-// @contract: (id:string) -> void
-// @pure: false
-const navigate=(id)=>{
-  const el=document.getElementById(id);
-  if(el){
-    const offset=32;
-    const elPos=el.getBoundingClientRect().top+window.pageYOffset-offset;
-    window.scrollTo({top:elPos,behavior:'smooth'});
-    window.location.hash=id;
-    updateNav();
-    if(window.innerWidth<=768){
-      toggleMenu();
-    }
+const navigateTo=(page)=>{
+  history.pushState({page},page,`/${page==='overview'?'':page}`);
+  loadPage(page);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768){
+    st.sidebarOpen&&toggleMenu();
   }
 };
 
@@ -682,37 +658,32 @@ const navigate=(id)=>{
 // @pure: false
 const init=()=>{
   initTheme();
-  loadStd();
+  
+  // Determine initial page from URL
+  const path=window.location.pathname.replace(/^\/site\/?/,'').replace(/^\//,'');
+  const initialPage=path||'overview';
+  loadPage(initialPage);
+  
+  // Setup button handlers
   document.getElementById('theme-btn')?.addEventListener('click',toggleTheme);
   document.getElementById('menu-btn')?.addEventListener('click',toggleMenu);
-  document.querySelectorAll('[data-action="navigate"]').forEach(el=>{
+  
+  // Setup navigation link handlers
+  document.querySelectorAll('.nav-link[data-page]').forEach(el=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
-      const href=el.getAttribute('href');
-      if(href&&href.startsWith('#')){
-        navigate(href.slice(1));
+      const page=el.getAttribute('data-page');
+      if(page){
+        navigateTo(page);
       }
     });
   });
-  window.addEventListener('hashchange',updateNav);
-  // Scroll spy with throttling
-  let ticking=false;
-  window.addEventListener('scroll',()=>{
-    if(!ticking){
-      window.requestAnimationFrame(()=>{
-        scrollSpy();
-        ticking=false;
-      });
-      ticking=true;
-    }
+  
+  // Handle browser back/forward
+  window.addEventListener('popstate',e=>{
+    const page=e.state?.page||'overview';
+    loadPage(page);
   });
-  // Handle initial hash on page load
-  setTimeout(()=>{
-    if(window.location.hash){
-      const id=window.location.hash.slice(1);
-      navigate(id);
-    }
-  },500);
 };
 
 // Run on load
