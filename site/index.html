@@ -66,25 +66,35 @@ body {
 }
 
 /* @scope: Layout */
-.layout { display: flex; min-height: 100vh; }
+.layout { 
+  display: flex; 
+  min-height: 100vh;
+  justify-content: center;
+}
+.layout-inner {
+  display: flex;
+  width: 100%;
+  max-width: 1280px;
+  position: relative;
+}
 .sidebar {
   width: var(--sidebar-w);
   background: var(--c-bg-2);
   border-right: 1px solid var(--c-border);
-  position: fixed;
+  position: sticky;
+  top: 0;
   height: 100vh;
   overflow-y: auto;
-  z-index: 100;
+  flex-shrink: 0;
   transition: transform var(--m);
 }
 .main {
-  margin-left: var(--sidebar-w);
   flex: 1;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--sp-xl) var(--sp-lg);
+  padding: var(--sp-xl) calc(var(--sp-lg) * 2);
 }
 .content-wrapper {
   width: 100%;
@@ -92,13 +102,16 @@ body {
 }
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
     transform: translateX(-100%);
   }
   .sidebar[data-state="open"] {
     transform: translateX(0);
   }
   .main {
-    margin-left: 0;
     padding: var(--sp-md) var(--sp-sm);
   }
 }
@@ -380,8 +393,9 @@ body {
 .hljs-number { color: #f78c6c; }
 </style>
 </head>
-<body>
+<body class="layout">
 
+<div class="layout-inner">
 <!-- @component: Sidebar
      @props: {}
      @emits: navigate
@@ -464,6 +478,7 @@ body {
     </footer>
   </div>
 </main>
+</div><!-- /layout-inner -->
 
 <script>
 // @module: AOCSSite
