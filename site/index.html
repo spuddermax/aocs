@@ -80,8 +80,15 @@ body {
 .main {
   margin-left: var(--sidebar-w);
   flex: 1;
-  max-width: 900px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: var(--sp-xl) var(--sp-lg);
+}
+.content-wrapper {
+  width: 100%;
+  max-width: 900px;
 }
 @media (max-width: 768px) {
   .sidebar {
@@ -92,7 +99,7 @@ body {
   }
   .main {
     margin-left: 0;
-    padding: var(--sp-md);
+    padding: var(--sp-md) var(--sp-sm);
   }
 }
 /* end @scope */
@@ -157,6 +164,7 @@ body {
   padding: 0 0 var(--sp-xl);
   margin-bottom: var(--sp-xl);
   border-bottom: 1px solid var(--c-border);
+  width: 100%;
 }
 .header h1 {
   font-size: 2.5rem;
@@ -208,6 +216,9 @@ body {
 /* end @scope */
 
 /* @scope: Content */
+.content {
+  width: 100%;
+}
 .content h2 {
   font-size: 1.875rem;
   margin: var(--sp-xl) 0 var(--sp-md);
@@ -346,6 +357,7 @@ body {
   padding: var(--sp-lg);
   text-align: center;
   margin-top: var(--sp-xl);
+  width: 100%;
 }
 .footer p {
   color: var(--c-txt-dim);
@@ -422,33 +434,35 @@ body {
     </button>
   </div>
 
-  <header class="header">
-    <h1>Agent-Oriented Coding Standard</h1>
-    <p>Write code optimized for AI agents. Save tokens. Ship faster.</p>
-    <div class="stats">
-      <div class="stat">
-        <span class="stat-num">25-40%</span>
-        <span class="stat-label">Token Savings</span>
+  <div class="content-wrapper">
+    <header class="header">
+      <h1>Agent-Oriented Coding Standard</h1>
+      <p>Write code optimized for AI agents. Save tokens. Ship faster.</p>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-num">25-40%</span>
+          <span class="stat-label">Token Savings</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">40-60%</span>
+          <span class="stat-label">Context Reduction</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">v0.6</span>
+          <span class="stat-label">Current Version</span>
+        </div>
       </div>
-      <div class="stat">
-        <span class="stat-num">40-60%</span>
-        <span class="stat-label">Context Reduction</span>
-      </div>
-      <div class="stat">
-        <span class="stat-num">v0.6</span>
-        <span class="stat-label">Current Version</span>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <article class="content" id="content">
-    <p style="text-align: center; color: var(--c-txt-dim);">Loading standard...</p>
-  </article>
+    <article class="content" id="content">
+      <p style="text-align: center; color: var(--c-txt-dim);">Loading standard...</p>
+    </article>
 
-  <footer class="footer">
-    <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
-    <p style="margin-top: var(--sp-sm);">MIT License • <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
-  </footer>
+    <footer class="footer">
+      <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
+      <p style="margin-top: var(--sp-sm);">MIT License • <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
+    </footer>
+  </div>
 </main>
 
 <script>
