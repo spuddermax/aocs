@@ -18,6 +18,9 @@ Grab the base standard, then add your languages:
 - [⬇ README.agent.md (agent-first README template)](/download/README.agent.md)
 - [⬇ AOCS-typescript.md](/download/AOCS-typescript.md)
 - [⬇ AOCS-javascript.md](/download/AOCS-javascript.md)
+- [⬇ AOCS-python.md](/download/AOCS-python.md)
+- [⬇ AOCS-go.md](/download/AOCS-go.md)
+- [⬇ AOCS-rust.md](/download/AOCS-rust.md)
 - [⬇ AOCS-html.md](/download/AOCS-html.md)
 - [⬇ AOCS-css.md](/download/AOCS-css.md)
 
@@ -136,6 +139,9 @@ Humans read the contracts. Agents read both — but the implementation can be dr
 
 - [TypeScript](/typescript) — Reference implementation with full examples
 - [JavaScript](/javascript) — State management and DOM patterns
+- [Python](/python) — Dynamic typing with contracts, comprehensions, and dataclasses
+- [Go](/go) — Error handling, struct patterns, and explicit dependencies
+- [Rust](/rust) — Ownership model, Result types, and iterator chains
 - [HTML](/html) — Semantic structure and data attribute contracts
 - [CSS](/css) — Design tokens and scoped styling
 

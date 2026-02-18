@@ -313,6 +313,9 @@ body {
       <div class="nav-section-title"><i data-lucide="code" class="nav-icon"></i>Languages</div>
       <a href="/typescript" class="nav-link" data-page="typescript">TypeScript</a>
       <a href="/javascript" class="nav-link" data-page="javascript">JavaScript</a>
+      <a href="/python" class="nav-link" data-page="python">Python</a>
+      <a href="/go" class="nav-link" data-page="go">Go</a>
+      <a href="/rust" class="nav-link" data-page="rust">Rust</a>
       <a href="/html" class="nav-link" data-page="html">HTML</a>
       <a href="/css" class="nav-link" data-page="css">CSS</a>
     </div>
@@ -356,6 +359,9 @@ body {
     <div class="rs-title" style="margin-top:var(--sp-md);">Add Languages</div>
     <button class="rs-file" data-action="download" data-file="AOCS-typescript.md"><i data-lucide="file-text" class="btn-icon"></i>TypeScript</button>
     <button class="rs-file" data-action="download" data-file="AOCS-javascript.md"><i data-lucide="file-text" class="btn-icon"></i>JavaScript</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-python.md"><i data-lucide="file-text" class="btn-icon"></i>Python</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-go.md"><i data-lucide="file-text" class="btn-icon"></i>Go</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-rust.md"><i data-lucide="file-text" class="btn-icon"></i>Rust</button>
     <button class="rs-file" data-action="download" data-file="AOCS-html.md"><i data-lucide="file-text" class="btn-icon"></i>HTML</button>
     <button class="rs-file" data-action="download" data-file="AOCS-css.md"><i data-lucide="file-text" class="btn-icon"></i>CSS</button>
     <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md"><i data-lucide="file-text" class="btn-icon"></i>Extension Protocol</button>
@@ -443,6 +449,9 @@ const pageToFile=(page)=>({
   extension:'AOCS-extension-protocol.md',
   typescript:'AOCS-typescript.md',
   javascript:'AOCS-javascript.md',
+  python:'AOCS-python.md',
+  go:'AOCS-go.md',
+  rust:'AOCS-rust.md',
   html:'AOCS-html.md',
   css:'AOCS-css.md'
 }[page]??null);
