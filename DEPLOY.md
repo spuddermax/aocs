@@ -2,59 +2,64 @@
 
 ## Local Development
 
-### Setup DNS
-Add to `/etc/hosts` (or Synology DNS):
-```
-192.168.0.65  aocs.lan
-```
-
 ### Run Dev Server
 ```bash
 ./dev-server.sh
 ```
 
-Access at: `http://aocs.lan:8080/aocs`
+Access at: `http://localhost:8080/site/`
 
-## Production (Cloudflare Pages)
+### Optional: Custom Local DNS
+If you want a custom local domain (e.g., `aocs.local`), add to `/etc/hosts`:
+```
+127.0.0.1  aocs.local
+```
 
-### Option 1: Manual Deploy (Recommended for /aocs subpath)
+Then access at: `http://aocs.local:8080/site/`
 
-Since you want this at `https://myavs.us/aocs`, the best approach is to integrate it into your existing Cloudflare Workers site.
+## Production Deployment
 
-1. **Copy site files to your myavs.us project:**
-   ```bash
-   cp -r site/ <your-myavs-project>/public/aocs/
-   cp docs/AOCS.md <your-myavs-project>/public/aocs/docs/
-   ```
-
-2. **Update your Workers routing** to serve static files from `/aocs`
-
-3. **Push to git** - Cloudflare will auto-deploy
-
-### Option 2: Standalone Cloudflare Pages
-
-If you want a separate deployment:
+### Option 1: Cloudflare Pages (Standalone)
 
 1. **Create new Cloudflare Pages project**
    - Connect to this git repo
    - Build directory: `site`
    - Build command: (none - static files)
+   - Build output directory: `/`
 
-2. **Custom domain:** `aocs.myavs.us` or similar
+2. **Configure custom domain** (optional)
 
-### DNS Note
-For `aocs.lan` to work locally, add to Synology DNS:
-- Hostname: `aocs`
-- IP: `192.168.0.65` (this machine)
+### Option 2: Integrate into Existing Site (Subpath)
 
-## File Structure for Production
+To deploy at a subpath like `/aocs` on an existing site:
 
-When deploying to `/aocs` subpath:
+1. **Copy files to your project:**
+   ```bash
+   cp -r site/ <your-project>/public/aocs/
+   cp -r docs/ <your-project>/public/aocs/docs/
+   ```
+
+2. **Update routing** in your web server/Workers to serve static files from `/aocs`
+
+3. **Push to deploy**
+
+### Option 3: GitHub Pages
+
+1. **Enable GitHub Pages** in repository settings
+2. **Set source to `main` branch**
+3. **Set directory to `/site`**
+4. Access at: `https://yourusername.github.io/aocs/`
+
+## File Structure
+
+The site uses relative paths, so it works at any base path:
+
 ```
-/aocs/
-  ├── index.html
-  └── docs/
-      └── AOCS.md
+/
+├── site/
+│   └── index.html
+└── docs/
+    └── AOCS.md
 ```
 
-All asset paths in `index.html` use relative paths (`../docs/AOCS.md`), so they'll work at any base path.
+All asset paths in `index.html` use relative paths (`../docs/AOCS.md`), making the site portable.

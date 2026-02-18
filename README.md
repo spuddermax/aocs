@@ -10,18 +10,16 @@ A coding standard optimized for AI agent readability and token efficiency.
 
 ## Quick Start
 
+### Read the Standard
+See [`docs/AOCS.md`](docs/AOCS.md)
+
 ### Local Development
 ```bash
 ./dev-server.sh
 ```
-Then visit: `http://localhost:8080/aocs`
+Then visit: `http://localhost:8080/site/`
 
-### Read the Standard
-See [`docs/AOCS.md`](docs/AOCS.md)
-
-## Environments
-- **Local:** http://aocs.lan:8080/aocs (requires DNS setup, see DEPLOY.md)
-- **Production:** https://myavs.us/aocs
+The dev server serves the entire project directory so relative paths work correctly.
 
 ## Structure
 - `/docs` - AOCS markdown standard (v0.6)
