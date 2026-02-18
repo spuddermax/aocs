@@ -1,0 +1,6 @@
+{
+  "aocsVersion": "0.7",
+  "languages": ["javascript"],
+  "mode": "strict",
+  "forbiddenPatterns": ["dynamic-eval"]
+}

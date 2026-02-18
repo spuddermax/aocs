@@ -1,0 +1,24 @@
+{
+  "name": "aocs",
+  "version": "0.7.0",
+  "description": "AOCS validator — lint and validate Agent-Oriented Coding Standard compliance",
+  "license": "MIT",
+  "bin": {
+    "aocs": "./bin/aocs.js"
+  },
+  "main": "./src/index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["aocs", "ai", "agent", "coding-standard", "linter", "validator"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spuddermax/aocs"
+  },
+  "files": ["bin/", "src/"],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "validate": "node bin/aocs.js validate"
+  }
+}
