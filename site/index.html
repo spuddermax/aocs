@@ -8,6 +8,9 @@
 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="assets/lucide.min.js"></script>
+<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico" sizes="32x32">
 <title>AOCS — Agent-Oriented Coding Standard</title>
 <meta name="description" content="A coding standard optimized for AI agent readability and token efficiency. 25-40% token savings across your codebase.">
 <style>
@@ -89,6 +92,8 @@ body {
   overflow-y: auto;
   flex-shrink: 0;
   transition: transform var(--m);
+  display: flex;
+  flex-direction: column;
 }
 .main {
   flex: 1;
@@ -127,13 +132,16 @@ body {
   border-bottom: 1px solid var(--c-border);
   background: var(--c-bg);
 }
-.ls-title { font-size: 1.25rem; font-weight: 700; color: var(--c-pri); margin-bottom: var(--sp-xs); }
+.ls-brand { display: flex; align-items: center; gap: var(--sp-sm); }
+.ls-logo { border-radius: var(--r-sm); flex-shrink: 0; }
+.ls-title { font-size: 1.25rem; font-weight: 700; color: var(--c-pri); margin-bottom: 0; }
 .ls-subtitle { font-size: 0.8rem; color: var(--c-txt-dim); }
 .ls-nav { padding: var(--sp-md); }
 .nav-section { margin-bottom: var(--sp-lg); }
 .nav-section-title {
   font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
   color: var(--c-txt-dim); margin-bottom: var(--sp-sm); letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: var(--sp-xs);
 }
 .nav-link {
   display: block; padding: var(--sp-xs) var(--sp-sm); color: var(--c-txt-dim);
@@ -145,6 +153,16 @@ body {
   background: var(--c-pri); color: white; font-weight: 600;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+.ls-footer {
+  margin-top: auto;
+  padding: var(--sp-md);
+  border-top: 1px solid var(--c-border);
+  font-size: 0.75rem;
+  color: var(--c-txt-dim);
+}
+.ls-footer p { margin-bottom: 2px; }
+.ls-footer a { color: var(--c-link); text-decoration: none; }
+.ls-footer a:hover { text-decoration: underline; }
 /* end @scope */
 
 /* @scope: Right Sidebar */
@@ -242,14 +260,13 @@ body {
 @media (max-width: 768px) { .menu-btn { display: inline-flex; } }
 /* end @scope */
 
-/* @scope: Footer */
-.footer {
-  background: var(--c-bg-2); border-top: 1px solid var(--c-border);
-  padding: var(--sp-lg); text-align: center; margin-top: var(--sp-xl); width: 100%;
-}
-.footer p { color: var(--c-txt-dim); font-size: 0.85rem; }
-.footer a { color: var(--c-link); text-decoration: none; }
-.footer a:hover { text-decoration: underline; }
+/* @scope: Lucide Icons */
+.btn-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-icon-sm { width: 12px; height: 12px; flex-shrink: 0; opacity: 0.5; }
+.nav-link-icon { display: flex; align-items: center; gap: var(--sp-xs); }
+.footer-icon { width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 2px; }
+.controls .btn svg { width: 18px; height: 18px; }
 /* end @scope */
 
 /* Syntax highlighting */
@@ -272,38 +289,48 @@ body {
 <!-- Left Sidebar: Navigation -->
 <aside class="left-sidebar" id="left-sidebar">
   <div class="ls-header">
-    <div class="ls-title">AOCS</div>
-    <div class="ls-subtitle">Agent-Oriented Coding Standard</div>
+    <div class="ls-brand" id="ls-brand">
+      <img src="assets/logo.png" alt="AOCS Logo" class="ls-logo" id="ls-logo" width="40" height="40" />
+      <div>
+        <div class="ls-title">AOCS</div>
+        <div class="ls-subtitle">Agent-Oriented Coding Standard</div>
+      </div>
+    </div>
   </div>
   <nav class="ls-nav" id="nav">
     <div class="nav-section" id="nav-standard">
-      <div class="nav-section-title">Standard</div>
+      <div class="nav-section-title"><i data-lucide="book-open" class="nav-icon"></i>Standard</div>
       <a href="/" class="nav-link" data-page="overview">Overview</a>
       <a href="/philosophy" class="nav-link" data-page="philosophy">Part I: Philosophy</a>
       <a href="/conventions" class="nav-link" data-page="conventions">Part II: Conventions</a>
       <a href="/extension" class="nav-link" data-page="extension">Part III: Extension</a>
     </div>
     <div class="nav-section" id="nav-languages">
-      <div class="nav-section-title">Languages</div>
+      <div class="nav-section-title"><i data-lucide="code" class="nav-icon"></i>Languages</div>
       <a href="/typescript" class="nav-link" data-page="typescript">TypeScript</a>
       <a href="/javascript" class="nav-link" data-page="javascript">JavaScript</a>
       <a href="/html" class="nav-link" data-page="html">HTML</a>
       <a href="/css" class="nav-link" data-page="css">CSS</a>
     </div>
     <div class="nav-section" id="nav-resources">
-      <div class="nav-section-title">Resources</div>
+      <div class="nav-section-title"><i data-lucide="layers" class="nav-icon"></i>Resources</div>
       <a href="/reference" class="nav-link" data-page="reference">Quick Reference</a>
-      <a href="https://github.com/spuddermax/aocs" class="nav-link" target="_blank">GitHub ↗</a>
+      <a href="https://github.com/spuddermax/aocs" class="nav-link nav-link-icon" target="_blank"><i data-lucide="github" class="nav-icon"></i>GitHub <i data-lucide="external-link" class="nav-icon-sm"></i></a>
     </div>
   </nav>
+  <div class="ls-footer" id="site-footer">
+    <p>AOCS v0.6</p>
+    <p>Built by Max &amp; MCP</p>
+    <p><a href="https://github.com/spuddermax/aocs" target="_blank"><i data-lucide="github" class="footer-icon"></i>GitHub</a> · MIT License</p>
+  </div>
 </aside>
 
 <!-- Main Content -->
 <main class="main">
   <div class="controls">
-    <button class="btn menu-btn" id="menu-btn" data-action="toggle-menu"><span>☰</span></button>
+    <button class="btn menu-btn" id="menu-btn" data-action="toggle-menu"><i data-lucide="menu"></i></button>
     <button class="btn" id="theme-btn" data-action="toggle-theme">
-      <span id="theme-icon">☀️</span><span id="theme-label">Light</span>
+      <i data-lucide="sun" id="theme-icon"></i><span id="theme-label">Light</span>
     </button>
   </div>
 
@@ -311,23 +338,20 @@ body {
     <p id="loading-msg" style="text-align:center;color:var(--c-txt-dim);">Loading...</p>
   </article>
 
-  <footer class="footer" id="site-footer">
-    <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
-    <p style="margin-top:var(--sp-sm);">MIT License · <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
-  </footer>
+  <!-- footer moved to left sidebar -->
 </main>
 
 <!-- Right Sidebar: Quick Start + On This Page -->
 <aside class="right-sidebar" id="right-sidebar">
   <div class="rs-section">
     <div class="rs-title">Quick Start</div>
-    <button class="rs-btn" data-action="download" data-file="AOCS.md">⬇ Download Base Standard</button>
+    <button class="rs-btn" data-action="download" data-file="AOCS.md"><i data-lucide="download" class="btn-icon"></i>Download Base Standard</button>
     <div class="rs-title" style="margin-top:var(--sp-md);">Add Languages</div>
-    <button class="rs-file" data-action="download" data-file="AOCS-typescript.md">📄 TypeScript</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-javascript.md">📄 JavaScript</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-html.md">📄 HTML</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-css.md">📄 CSS</button>
-    <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md">📄 Extension Protocol</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-typescript.md"><i data-lucide="file-text" class="btn-icon"></i>TypeScript</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-javascript.md"><i data-lucide="file-text" class="btn-icon"></i>JavaScript</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-html.md"><i data-lucide="file-text" class="btn-icon"></i>HTML</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-css.md"><i data-lucide="file-text" class="btn-icon"></i>CSS</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md"><i data-lucide="file-text" class="btn-icon"></i>Extension Protocol</button>
   </div>
   <div class="rs-section" id="toc-section" style="display:none;">
     <div class="rs-title">On This Page</div>
@@ -372,7 +396,8 @@ const toggleTheme=()=>{
 // @contract: () -> void | updates theme button icon and label based on current theme
 const updateThemeBtn=()=>{
   const d=st.theme==='dark';
-  document.getElementById('theme-icon').textContent=d?'☀️':'🌙';
+  const ico=document.getElementById('theme-icon');
+  if(ico){ico.setAttribute('data-lucide',d?'sun':'moon');lucide?.createIcons();}
   document.getElementById('theme-label').textContent=d?'Light':'Dark';
 };
 
@@ -419,7 +444,7 @@ const renderContent=(md)=>{
   // Download bar on language/extension pages
   const file=pageToFile(st.page);
   if(file){
-    html=`<div class="dl-bar"><button class="dl-btn" data-action="download" data-file="AOCS.md">📄 AOCS.md (base)</button><button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button></div>${html}`;
+    html=`<div class="dl-bar"><button class="dl-btn" data-action="download" data-file="AOCS.md"><i data-lucide="file-text" class="btn-icon"></i>AOCS.md (base)</button><button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}"><i data-lucide="download" class="btn-icon"></i>${file}</button></div>${html}`;
   }
   document.getElementById('content').innerHTML=html;
   updateNav();
@@ -428,6 +453,7 @@ const renderContent=(md)=>{
 
 // @contract: () -> void | attaches click handlers to internal links and download buttons
 const bindContentLinks=()=>{
+  if(typeof lucide!=='undefined')lucide.createIcons();
   document.querySelectorAll('.page-link').forEach(el=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
@@ -643,6 +669,7 @@ const init=()=>{
     });
   });
   window.addEventListener('popstate',e=>loadPage(e.state?.page||'overview'));
+  if(typeof lucide!=='undefined')lucide.createIcons();
 };
 
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
