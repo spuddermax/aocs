@@ -30,6 +30,8 @@
 
 ### Infrastructure ✅
 - [x] Git repository initialized
+- [x] GitHub repository created: https://github.com/spuddermax/aocs
+- [x] MIT License added
 - [x] Dev server script (`dev-server.sh`)
 - [x] Deployment guide (`DEPLOY.md`)
 - [x] README with quick start

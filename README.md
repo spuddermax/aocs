@@ -1,8 +1,12 @@
 # AOCS - Agent-Oriented Coding Standard
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 A coding standard optimized for AI agent readability and token efficiency.
 
 **Token savings: 25-40% overall | 40-60% context reduction**
+
+🔗 **Repository:** https://github.com/spuddermax/aocs
 
 ## Quick Start
 
