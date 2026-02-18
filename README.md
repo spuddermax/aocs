@@ -1,37 +1,93 @@
-# AOCS - Agent-Oriented Coding Standard
+# AOCS — Agent-Oriented Coding Standard
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A coding standard optimized for AI agent readability and token efficiency.
 
-**Token savings: 25-40% overall | 40-60% context reduction**
+**25-40% overall token savings · 40-60% context reduction**
 
-🔗 **Repository:** https://github.com/spuddermax/aocs
+🌐 **Live site:** [aocs.myavs.us](https://aocs.myavs.us)
+📦 **Repository:** [github.com/spuddermax/aocs](https://github.com/spuddermax/aocs)
+
+## What is AOCS?
+
+AOCS separates **specification** from **implementation**:
+
+- **Specification layer**: formal `@contract` annotations declaring inputs, outputs, errors, and side effects
+- **Implementation layer**: compressed code optimized for token efficiency
+
+Humans read the contracts. Agents read both — but implementation can be dramatically shorter.
 
 ## Quick Start
 
-### Read the Standard
-See [`docs/AOCS.md`](docs/AOCS.md)
+1. Download the base standard and your language files:
 
-### Local Development
-```bash
-./dev-server.sh
+| File | Purpose |
+|------|---------|
+| [`AOCS.md`](docs/standard/AOCS.md) | Base standard (required) |
+| [`AOCS-typescript.md`](docs/standard/AOCS-typescript.md) | TypeScript rules |
+| [`AOCS-javascript.md`](docs/standard/AOCS-javascript.md) | JavaScript rules |
+| [`AOCS-html.md`](docs/standard/AOCS-html.md) | HTML rules |
+| [`AOCS-css.md`](docs/standard/AOCS-css.md) | CSS rules |
+| [`AOCS-extension-protocol.md`](docs/standard/AOCS-extension-protocol.md) | Bootstrap new languages |
+
+2. Drop them in your project's `docs/` directory.
+
+3. Reference from your `AGENTS.md`:
+
+```markdown
+## Coding Standard
+Follow the AOCS standard:
+- docs/AOCS.md (base conventions)
+- docs/AOCS-typescript.md (TypeScript rules)
 ```
-Then visit: `http://localhost:8080/site/`
-
-The dev server serves the entire project directory so relative paths work correctly.
-
-## Structure
-- `/docs` - AOCS markdown standard (v0.6)
-- `/site` - Website source (HTML/CSS/JS) — built using AOCS principles
-- `/examples` - Code examples (TODO)
 
 ## Key Principles
+
 1. **Contracts over comments** — formal `@contract` annotations replace prose
 2. **Compression over verbosity** — terse implementation, readable specs
-3. **Enforce boundaries centrally** — module contracts non-negotiable, implementation flexible
+3. **Enforce boundaries centrally** — module contracts are non-negotiable
 4. **Context is scarce** — structured docs, not encyclopedic AGENTS.md
 5. **Drift is inevitable** — mechanical enforcement via linters
 
-## Deployment
-See [`DEPLOY.md`](DEPLOY.md) for production deployment instructions.
+## Project Structure
+
+```
+aocs/
+├── docs/
+│   ├── standard/          ← downloadable AOCS files
+│   │   ├── AOCS.md
+│   │   ├── AOCS-typescript.md
+│   │   ├── AOCS-javascript.md
+│   │   ├── AOCS-html.md
+│   │   ├── AOCS-css.md
+│   │   └── AOCS-extension-protocol.md
+│   └── pages/             ← website content (markdown)
+├── site/
+│   └── index.html         ← documentation website (built using AOCS)
+├── examples/
+│   └── payment-processor.ts
+├── dev-server.py           ← local dev server
+├── DEPLOY.md
+└── LICENSE
+```
+
+## Local Development
+
+```bash
+python3 dev-server.py
+```
+
+Visit `http://localhost:8080` — redirects to the site automatically.
+
+## Examples
+
+See [`examples/payment-processor.ts`](examples/payment-processor.ts) for a side-by-side comparison of human-readable vs. agent-optimized code showing **58% token savings** on a single function.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+*Built by [spuddermax](https://github.com/spuddermax). The teams that standardize this now will build the conventions everyone else eventually adopts.*

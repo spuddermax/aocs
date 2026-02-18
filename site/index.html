@@ -253,21 +253,21 @@ body {
 /* end @scope */
 
 /* Syntax highlighting */
-.hljs-keyword { color: #c792ea; }
-.hljs-string { color: #c3e88d; }
-.hljs-comment { color: #697098; font-style: italic; }
-.hljs-function { color: #82aaff; }
-.hljs-number { color: #f78c6c; }
-[data-theme="light"] .hljs-keyword { color: #7c3aed; }
-[data-theme="light"] .hljs-string { color: #16a34a; }
-[data-theme="light"] .hljs-comment { color: #9ca3af; }
-[data-theme="light"] .hljs-function { color: #2563eb; }
-[data-theme="light"] .hljs-number { color: #ea580c; }
+.aocs-hl-kw { color: #c792ea; }
+.aocs-hl-str { color: #c3e88d; }
+.aocs-hl-cmt { color: #697098; font-style: italic; }
+.aocs-hl-fn { color: #82aaff; }
+.aocs-hl-num { color: #f78c6c; }
+[data-theme="light"] .aocs-hl-kw { color: #7c3aed; }
+[data-theme="light"] .aocs-hl-str { color: #16a34a; }
+[data-theme="light"] .aocs-hl-cmt { color: #9ca3af; }
+[data-theme="light"] .aocs-hl-fn { color: #2563eb; }
+[data-theme="light"] .aocs-hl-num { color: #ea580c; }
 </style>
 </head>
 <body class="layout">
 
-<div class="layout-inner">
+<div class="layout-inner" id="layout-inner">
 
 <!-- Left Sidebar: Navigation -->
 <aside class="left-sidebar" id="left-sidebar">
@@ -276,21 +276,21 @@ body {
     <div class="ls-subtitle">Agent-Oriented Coding Standard</div>
   </div>
   <nav class="ls-nav" id="nav">
-    <div class="nav-section">
+    <div class="nav-section" id="nav-standard">
       <div class="nav-section-title">Standard</div>
       <a href="/" class="nav-link" data-page="overview">Overview</a>
       <a href="/philosophy" class="nav-link" data-page="philosophy">Part I: Philosophy</a>
       <a href="/conventions" class="nav-link" data-page="conventions">Part II: Conventions</a>
       <a href="/extension" class="nav-link" data-page="extension">Part III: Extension</a>
     </div>
-    <div class="nav-section">
+    <div class="nav-section" id="nav-languages">
       <div class="nav-section-title">Languages</div>
       <a href="/typescript" class="nav-link" data-page="typescript">TypeScript</a>
       <a href="/javascript" class="nav-link" data-page="javascript">JavaScript</a>
       <a href="/html" class="nav-link" data-page="html">HTML</a>
       <a href="/css" class="nav-link" data-page="css">CSS</a>
     </div>
-    <div class="nav-section">
+    <div class="nav-section" id="nav-resources">
       <div class="nav-section-title">Resources</div>
       <a href="/reference" class="nav-link" data-page="reference">Quick Reference</a>
       <a href="https://github.com/spuddermax/aocs" class="nav-link" target="_blank">GitHub ↗</a>
@@ -308,10 +308,10 @@ body {
   </div>
 
   <article class="content" id="content">
-    <p style="text-align:center;color:var(--c-txt-dim);">Loading...</p>
+    <p id="loading-msg" style="text-align:center;color:var(--c-txt-dim);">Loading...</p>
   </article>
 
-  <footer class="footer">
+  <footer class="footer" id="site-footer">
     <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
     <p style="margin-top:var(--sp-sm);">MIT License · <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
   </footer>
@@ -351,19 +351,25 @@ body {
 // }
 const st={theme:'dark',page:'overview',sidebarOpen:false,content:''};
 
+// Base path: supports both /site/ (local dev) and / (production)
+const BASE = location.pathname.startsWith('/site') ? '..' : '.';
+
 // --- Theme ---
 
+// @contract: () -> void | initializes theme from localStorage, sets DOM attribute
 const initTheme=()=>{
   st.theme=localStorage.getItem('aocs-theme')||'dark';
   document.documentElement.setAttribute('data-theme',st.theme);
   updateThemeBtn();
 };
+// @contract: () -> void | toggles theme dark/light, persists to localStorage
 const toggleTheme=()=>{
   st.theme=st.theme==='dark'?'light':'dark';
   document.documentElement.setAttribute('data-theme',st.theme);
   localStorage.setItem('aocs-theme',st.theme);
   updateThemeBtn();
 };
+// @contract: () -> void | updates theme button icon and label based on current theme
 const updateThemeBtn=()=>{
   const d=st.theme==='dark';
   document.getElementById('theme-icon').textContent=d?'☀️':'🌙';
@@ -372,6 +378,7 @@ const updateThemeBtn=()=>{
 
 // --- Menu ---
 
+// @contract: () -> void | toggles mobile sidebar open/closed state
 const toggleMenu=()=>{
   st.sidebarOpen=!st.sidebarOpen;
   document.getElementById('left-sidebar').setAttribute('data-state',st.sidebarOpen?'open':'closed');
@@ -379,9 +386,10 @@ const toggleMenu=()=>{
 
 // --- Page Loading ---
 
+// @contract: (page:str) -> Promise<void> | fetches and renders markdown page, updates nav and TOC
 const loadPage=async(page)=>{
   try{
-    const res=await fetch(`../docs/pages/${page}.md`);
+    const res=await fetch(`${BASE}/docs/pages/${page}.md`);
     if(!res.ok)throw new Error('not found');
     const txt=await res.text();
     st.content=txt;
@@ -394,6 +402,7 @@ const loadPage=async(page)=>{
   }
 };
 
+// @contract: (page:str) -> str|null | maps page slug to downloadable filename
 const pageToFile=(page)=>({
   extension:'AOCS-extension-protocol.md',
   typescript:'AOCS-typescript.md',
@@ -404,6 +413,7 @@ const pageToFile=(page)=>({
 
 // --- Rendering ---
 
+// @contract: (md:str) -> void | converts markdown to HTML, injects download bar if needed, updates DOM
 const renderContent=(md)=>{
   let html=md2html(md);
   // Download bar on language/extension pages
@@ -416,6 +426,7 @@ const renderContent=(md)=>{
   bindContentLinks();
 };
 
+// @contract: () -> void | attaches click handlers to internal links and download buttons
 const bindContentLinks=()=>{
   document.querySelectorAll('.page-link').forEach(el=>{
     el.addEventListener('click',e=>{
@@ -435,6 +446,7 @@ const bindContentLinks=()=>{
 
 // --- Right Sidebar: TOC ---
 
+// @contract: () -> void | builds table of contents from h2/h3 headings, adds scroll spy
 const buildTOC=()=>{
   const headings=document.querySelectorAll('.content h2[id], .content h3[id]');
   const container=document.getElementById('toc-links');
@@ -485,6 +497,7 @@ const buildTOC=()=>{
 
 // --- Navigation ---
 
+// @contract: () -> void | updates active state on nav links based on current page
 const updateNav=()=>{
   document.querySelectorAll('.nav-link').forEach(link=>{
     const page=link.getAttribute('data-page');
@@ -492,6 +505,7 @@ const updateNav=()=>{
   });
 };
 
+// @contract: (page:str) -> void | pushes history state, loads page, scrolls to top, closes mobile menu
 const navigateTo=(page)=>{
   history.pushState({page},page,`/${page==='overview'?'':page}`);
   loadPage(page);
@@ -501,9 +515,10 @@ const navigateTo=(page)=>{
 
 // --- Download ---
 
+// @contract: (filename:str) -> Promise<void> | fetches file from docs/standard and triggers browser download
 const downloadFile=async(filename)=>{
   try{
-    const res=await fetch(`../docs/standard/${filename}`);
+    const res=await fetch(`${BASE}/docs/standard/${filename}`);
     const txt=await res.text();
     const blob=new Blob([txt],{type:'text/markdown'});
     const url=URL.createObjectURL(blob);
@@ -515,6 +530,7 @@ const downloadFile=async(filename)=>{
 
 // --- Markdown Parser ---
 
+// @contract: (md:str) -> str | converts markdown to HTML with syntax highlighting
 const md2html=(md)=>{
   let h=md;
   h=h.replace(/^#### (.*$)/gim,(m,t)=>`<h4 id="${slug(t)}">${t}</h4>`);
@@ -570,35 +586,41 @@ const md2html=(md)=>{
 
 // --- Utilities ---
 
+// @contract: (s:str) -> str | converts string to URL-safe slug
 const slug=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,'');
+// @contract: (s:str) -> str | escapes HTML entities
 const esc=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 
 // --- Syntax Highlighting (pre-DOM, operates on escaped text) ---
 
+// @contract: (s:str) -> str | highlights JavaScript/TypeScript syntax
 const hlJS=(s)=>{
-  s=s.replace(/(\/\/.*)$/gm,'<span class="hljs-comment">$1</span>');
-  s=s.replace(/(&#039;[^]*?&#039;)/g,'<span class="hljs-string">$1</span>');
-  s=s.replace(/(&quot;[^]*?&quot;)/g,'<span class="hljs-string">$1</span>');
-  s=s.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default|new|throw|typeof|void|null|undefined|true|false|Promise|extends|super)\b/g,'<span class="hljs-keyword">$1</span>');
-  s=s.replace(/\b(\d+\.?\d*)\b/g,'<span class="hljs-number">$1</span>');
+  s=s.replace(/(\/\/.*)$/gm,'<span class="aocs-hl-cmt">$1</span>');
+  s=s.replace(/(&#039;[^]*?&#039;)/g,'<span class="aocs-hl-str">$1</span>');
+  s=s.replace(/(&quot;[^]*?&quot;)/g,'<span class="aocs-hl-str">$1</span>');
+  s=s.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default|new|throw|typeof|void|null|undefined|true|false|Promise|extends|super)\b/g,'<span class="aocs-hl-kw">$1</span>');
+  s=s.replace(/\b(\d+\.?\d*)\b/g,'<span class="aocs-hl-num">$1</span>');
   return s;
 };
+// @contract: (s:str) -> str | highlights CSS syntax
 const hlCSS=(s)=>{
-  s=s.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="hljs-comment">$1</span>');
-  s=s.replace(/(--[\w-]+)/g,'<span class="hljs-keyword">$1</span>');
-  s=s.replace(/\b(\d+\.?\d*(px|rem|em|%|ms|s|vh|vw)?)\b/g,'<span class="hljs-number">$1</span>');
-  s=s.replace(/(#[0-9a-fA-F]{3,8})\b/g,'<span class="hljs-string">$1</span>');
+  s=s.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="aocs-hl-cmt">$1</span>');
+  s=s.replace(/(--[\w-]+)/g,'<span class="aocs-hl-kw">$1</span>');
+  s=s.replace(/\b(\d+\.?\d*(px|rem|em|%|ms|s|vh|vw)?)\b/g,'<span class="aocs-hl-num">$1</span>');
+  s=s.replace(/(#[0-9a-fA-F]{3,8})\b/g,'<span class="aocs-hl-str">$1</span>');
   return s;
 };
+// @contract: (s:str) -> str | highlights HTML syntax
 const hlHTML=(s)=>{
-  s=s.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="hljs-comment">$1</span>');
-  s=s.replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="hljs-keyword">$2</span>');
-  s=s.replace(/([\w-]+)=(&quot;[^]*?&quot;)/g,'<span class="hljs-function">$1</span>=<span class="hljs-string">$2</span>');
+  s=s.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="aocs-hl-cmt">$1</span>');
+  s=s.replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="aocs-hl-kw">$2</span>');
+  s=s.replace(/([\w-]+)=(&quot;[^]*?&quot;)/g,'<span class="aocs-hl-fn">$1</span>=<span class="aocs-hl-str">$2</span>');
   return s;
 };
 
 // --- Init ---
 
+// @contract: () -> void | initializes app: theme, routing, event listeners
 const init=()=>{
   initTheme();
   const path=window.location.pathname.replace(/^\/site\/?/,'').replace(/^\//,'');
