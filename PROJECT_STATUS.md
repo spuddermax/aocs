@@ -12,15 +12,24 @@
   - Part III: Language Extension Protocol
   - Part IV: Language Definitions (TypeScript, JavaScript, HTML, CSS)
   - Integrated OpenAI Harness Engineering principles
+- [x] Multi-page structure (`docs/pages/`)
+  - overview.md - Landing page with elevator pitch
+  - philosophy.md - Part I: Core Philosophy
+  - conventions.md - Part II: Universal Conventions
+  - extension.md - Part III: Extension Protocol
+  - typescript.md - TypeScript language definition
+  - javascript.md, html.md, css.md - Language definitions (placeholders)
+  - reference.md - Quick reference guide
 
 ### Website ✅
-- [x] Landing page (`site/index.html`)
+- [x] Multi-page documentation site (`site/index.html`)
   - Built using AOCS principles (meta!)
-  - Hero section with stats (25-40% token savings)
-  - Before/After code examples
-  - Full standard display with copy/download
-  - Responsive design
-  - Works at `/aocs` subpath
+  - Client-side routing (SPA architecture)
+  - Sidebar navigation with active state
+  - Separate pages for each section
+  - Dark/light mode toggle
+  - Responsive design with mobile menu
+  - MDN/api.jquery.com inspired layout
 
 ### Examples ✅
 - [x] TypeScript payment processor (`examples/payment-processor.ts`)
