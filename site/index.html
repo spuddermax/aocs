@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- @app: AOCS Landing Page
+     @routes: / (single page)
+     @state: {section:str, theme:'light'|'dark'}
+     @components: Hero, StandardView, Examples, Download
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AOCS — Agent-Oriented Coding Standard</title>
+<meta name="description" content="A coding standard optimized for AI agent readability and token efficiency. 25-40% token savings across your codebase.">
+<style>
+/* @design-system:
+   color.primary: #2563eb
+   color.accent: #10b981
+   color.bg: #ffffff
+   color.text: #1f2937
+   spacing.unit: 0.25rem
+   radius: 0.5rem
+   motion: 200ms
+*/
+:root {
+  --c-pri: #2563eb;
+  --c-acc: #10b981;
+  --c-bg: #fff;
+  --c-txt: #1f2937;
+  --c-txt-dim: #6b7280;
+  --c-border: #e5e7eb;
+  --sp-u: 0.25rem;
+  --sp-xs: calc(2 * var(--sp-u));
+  --sp-sm: calc(3 * var(--sp-u));
+  --sp-md: calc(4 * var(--sp-u));
+  --sp-lg: calc(6 * var(--sp-u));
+  --sp-xl: calc(8 * var(--sp-u));
+  --r: 0.5rem;
+  --m: 200ms;
+  --font-mono: 'Courier New', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  color: var(--c-txt);
+  background: var(--c-bg);
+}
+
+/* @scope: Layout */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 var(--sp-md); }
+.section { padding: var(--sp-xl) 0; }
+/* end @scope */
+
+/* @scope: Hero */
+.hero {
+  background: linear-gradient(135deg, var(--c-pri) 0%, #1e40af 100%);
+  color: white;
+  padding: var(--sp-xl) 0;
+  text-align: center;
+}
+.hero h1 { font-size: 3rem; margin-bottom: var(--sp-md); font-weight: 700; }
+.hero p { font-size: 1.25rem; margin-bottom: var(--sp-lg); opacity: 0.95; }
+.hero-stats { display: flex; gap: var(--sp-lg); justify-content: center; margin-top: var(--sp-lg); }
+.stat { background: rgba(255,255,255,0.1); padding: var(--sp-md); border-radius: var(--r); backdrop-filter: blur(10px); }
+.stat-num { font-size: 2.5rem; font-weight: 700; display: block; }
+.stat-label { font-size: 0.875rem; opacity: 0.9; }
+/* end @scope */
+
+/* @scope: Buttons */
+.btn {
+  display: inline-block;
+  padding: var(--sp-sm) var(--sp-lg);
+  border-radius: var(--r);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all var(--m);
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+}
+.btn-primary { background: white; color: var(--c-pri); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.btn-secondary { background: var(--c-acc); color: white; margin-left: var(--sp-sm); }
+.btn-secondary:hover { background: #059669; }
+/* end @scope */
+
+/* @scope: Content */
+h2 { font-size: 2rem; margin-bottom: var(--sp-md); color: var(--c-pri); }
+h3 { font-size: 1.5rem; margin: var(--sp-lg) 0 var(--sp-md); }
+p { margin-bottom: var(--sp-md); color: var(--c-txt-dim); }
+/* end @scope */
+
+/* @scope: Code Examples */
+.example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-lg); margin: var(--sp-lg) 0; }
+.example-card {
+  border: 1px solid var(--c-border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.example-header {
+  background: var(--c-pri);
+  color: white;
+  padding: var(--sp-sm) var(--sp-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.example-badge {
+  background: rgba(255,255,255,0.2);
+  padding: var(--sp-xs) var(--sp-sm);
+  border-radius: calc(var(--r) / 2);
+  font-size: 0.875rem;
+}
+.example-code {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: var(--sp-md);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  overflow-x: auto;
+  line-height: 1.5;
+}
+.example-code .keyword { color: #c792ea; }
+.example-code .string { color: #c3e88d; }
+.example-code .comment { color: #697098; }
+.example-code .function { color: #82aaff; }
+/* end @scope */
+
+/* @scope: Standard Display */
+.standard-content {
+  background: #f9fafb;
+  padding: var(--sp-lg);
+  border-radius: var(--r);
+  border: 1px solid var(--c-border);
+  margin: var(--sp-lg) 0;
+  max-height: 600px;
+  overflow-y: auto;
+}
+.standard-content pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: var(--sp-md);
+  border-radius: var(--r);
+  overflow-x: auto;
+  margin: var(--sp-md) 0;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.standard-content code {
+  background: #e5e7eb;
+  color: #dc2626;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.standard-content pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+/* end @scope */
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .example-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- @component: Hero
+     @props: {}
+     @emits: none
+-->
+<section id="hero" class="hero">
+  <div class="container">
+    <h1>Agent-Oriented Coding Standard</h1>
+    <p>Write code optimized for AI agents. Save tokens. Ship faster.</p>
+    <div>
+      <a href="#examples" class="btn btn-primary" data-action="scroll">See Examples</a>
+      <a href="#standard" class="btn btn-secondary" data-action="scroll">Read Standard</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">25-40%</span>
+        <span class="stat-label">Total Token Savings</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">40-60%</span>
+        <span class="stat-label">Context Reduction</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">58%</span>
+        <span class="stat-label">Example Compression</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @component: Elevator Pitch
+     @props: {}
+     @emits: none
+-->
+<section class="section">
+  <div class="container">
+    <h2>The Elevator Pitch</h2>
+    <p>Every token you save is real money and real speed. As AI agents write more of your code, your codebase becomes your AI's primary working memory — and right now we're padding that memory with information optimized for humans who may never read it again.</p>
+    <p>Formal contracts plus compressed implementation can cut your AI's context consumption by 40-60%. At scale, across thousands of daily agent interactions, that compounds into dramatically lower API costs, faster iteration cycles, and agents that can hold larger systems in context simultaneously — meaning fewer errors from incomplete understanding.</p>
+    <p>The teams that standardize this now will build the conventions everyone else eventually adopts. The cost of pioneering it is low — it's a coding style shift, not an infrastructure overhaul. The upside is a structural efficiency advantage that grows as AI takes on more of the codebase.</p>
+    <p><strong>We're at the moment where the defaults are still being set. This is worth setting intentionally.</strong></p>
+  </div>
+</section>
+
+<!-- @component: Examples
+     @props: {}
+     @emits: none
+-->
+<section id="examples" class="section" style="background: #f9fafb;">
+  <div class="container">
+    <h2>Before & After</h2>
+    <div class="example-grid">
+      <div class="example-card">
+        <div class="example-header">
+          <span>Human-Readable</span>
+          <span class="example-badge">180 tokens</span>
+        </div>
+        <div class="example-code"><span class="keyword">async function</span> <span class="function">processPayment</span>(order: Order, paymentMethod: PaymentMethod): Promise&lt;PaymentResult&gt; {
+  <span class="comment">// Validate the order has items before processing</span>
+  <span class="keyword">if</span> (!order.items || order.items.length === <span class="string">0</span>) {
+    <span class="keyword">throw new</span> <span class="function">Error</span>(<span class="string">'Cannot process payment for empty order'</span>);
+  }
+  
+  <span class="keyword">const</span> total = order.items.<span class="function">reduce</span>((sum, item) => {
+    <span class="keyword">return</span> sum + (item.price * item.quantity);
+  }, <span class="string">0</span>);
+  
+  <span class="keyword">const</span> result = <span class="keyword">await</span> paymentMethod.<span class="function">charge</span>(order.customerId, total);
+  
+  <span class="keyword">return</span> {
+    success: result.approved,
+    transactionId: result.id,
+    amount: total
+  };
+}</div>
+      </div>
+      
+      <div class="example-card">
+        <div class="example-header" style="background: #10b981;">
+          <span>Agent-Optimized</span>
+          <span class="example-badge">75 tokens</span>
+        </div>
+        <div class="example-code"><span class="comment">// @contract: (o:Order{items:NonEmpty}, pm:PM) -> Promise&lt;{success:bool, txId:str, amt:num}&gt;</span>
+<span class="comment">// @throws: EmptyOrderError</span>
+<span class="comment">// @pure: false</span>
+<span class="keyword">type</span> O=Order; <span class="keyword">type</span> PM=PaymentMethod; <span class="keyword">type</span> PR=PaymentResult;
+<span class="keyword">const</span> <span class="function">pp</span>=<span class="keyword">async</span>(o:O,pm:PM):Promise&lt;PR&gt;=>{
+  <span class="keyword">if</span>(!o.items?.length)<span class="keyword">throw new</span> <span class="function">EmptyOrderError</span>()
+  <span class="keyword">const</span> amt=o.items.<span class="function">reduce</span>((a,i)=>a+(i.price*i.qty),<span class="string">0</span>)
+  <span class="keyword">const</span> r=<span class="keyword">await</span> pm.<span class="function">charge</span>(o.customerId,amt)
+  <span class="keyword">return</span>{success:r.approved,txId:r.id,amt}
+}</div>
+      </div>
+    </div>
+    <p style="text-align: center; font-size: 1.25rem; margin-top: var(--sp-lg);"><strong>58% fewer tokens</strong> on a single function. Now multiply that across a 10,000 line codebase an agent reads dozens of times a day.</p>
+  </div>
+</section>
+
+<!-- @component: Standard
+     @props: {}
+     @emits: copy
+-->
+<section id="standard" class="section">
+  <div class="container">
+    <h2>The Standard</h2>
+    <div style="text-align: right; margin-bottom: var(--sp-md);">
+      <button class="btn btn-primary" data-action="copy-standard" id="btn-copy">Copy Markdown</button>
+      <a href="../docs/AOCS.md" download class="btn btn-secondary">Download</a>
+    </div>
+    <div class="standard-content" id="standard-content">
+      <p style="text-align: center; color: var(--c-txt-dim);">Loading standard...</p>
+    </div>
+  </div>
+</section>
+
+<footer style="background: #1f2937; color: white; padding: var(--sp-lg) 0; text-align: center;">
+  <div class="container">
+    <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
+    <p style="margin-top: var(--sp-sm); opacity: 0.7;">Open source. Free to use. <a href="https://github.com/yourusername/aocs" style="color: var(--c-acc);">Contribute on GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+// @module: AOCSLandingPage
+// @exports: init, loadStandard, copyStandard
+// @depends: none
+// @mutates: DOM (standard-content, btn-copy)
+
+// @state-manifest: {
+//   standardLoaded: boolean,
+//   standardText: string
+// }
+const st={loaded:false,txt:''};
+
+// @contract: () -> Promise<void>
+// @throws: never
+// @pure: false
+const loadStd=async()=>{
+  try{
+    const res=await fetch('../docs/AOCS.md');
+    const txt=await res.text();
+    st.txt=txt;
+    st.loaded=true;
+    const el=document.getElementById('standard-content');
+    el.innerHTML=`<pre><code>${escHtml(txt)}</code></pre>`;
+  }catch(e){
+    const el=document.getElementById('standard-content');
+    el.innerHTML='<p style="color: #dc2626;">Failed to load standard. <a href="../docs/AOCS.md">View directly</a></p>';
+  }
+};
+
+// @contract: (str:string) -> string
+// @pure: true
+const escHtml=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+// @contract: () -> void
+// @throws: never
+// @pure: false
+const copySt=()=>{
+  if(!st.loaded)return;
+  navigator.clipboard.writeText(st.txt).then(()=>{
+    const btn=document.getElementById('btn-copy');
+    const orig=btn.textContent;
+    btn.textContent='Copied!';
+    btn.style.background='var(--c-acc)';
+    setTimeout(()=>{btn.textContent=orig;btn.style.background='';},2000);
+  });
+};
+
+// @contract: () -> void
+// @pure: false
+const init=()=>{
+  loadStd();
+  document.getElementById('btn-copy')?.addEventListener('click',copySt);
+  document.querySelectorAll('[data-action="scroll"]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      const tgt=document.querySelector(el.getAttribute('href'));
+      tgt?.scrollIntoView({behavior:'smooth'});
+    });
+  });
+};
+
+// Run on load
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+}else{
+  init();
+}
+</script>
+
+</body>
+</html>
