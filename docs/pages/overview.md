@@ -51,6 +51,22 @@ Don't paste the full standard into AGENTS.md — context is scarce. Point to the
 
 ---
 
+## What's New in v0.8
+
+AOCS v0.8 makes the standard **enforceable infrastructure** — not just rules, but tooling that mechanically validates compliance.
+
+**Major additions:**
+
+- **CLI Validator** (`aocs validate`) — Zero-dependency Node.js linter that checks aocs.json, file roles, contracts, hints, and forbidden patterns. Pluggable language modules loaded from your config. Run `npx aocs validate` in any AOCS project.
+- **`aocs init`** — Interactive scaffolding that generates `aocs.json` and `README.agent.md` for new projects
+- **Python, Go, Rust** — Three new language extensions with idiomatic examples, compression patterns, and before/after token comparisons
+- **Stable API Endpoints** — Agents fetch files at `/raw/latest/AOCS.md` or pin to `/raw/v0.8/AOCS.md`. `/manifest.json` provides the full file index.
+- **Self-Compliance** — The AOCS repo itself passes `aocs validate` with zero failures
+
+**The litmus test:** An agent can now clone a repo, read `README.agent.md`, parse `aocs.json`, run `aocs validate`, and reliably generate compliant code. AOCS is no longer a style guide — it's infrastructure.
+
+---
+
 ## What's New in v0.7
 
 AOCS v0.7 transforms from a style guide into a **low-entropy intermediate representation for code** — a human-writable DSL optimized for LLM cognition.
