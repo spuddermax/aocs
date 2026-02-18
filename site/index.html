@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <!-- @app: AOCS Documentation Site
-     @routes: / (single page app)
-     @state: {section:str, theme:'dark'|'light', sidebarOpen:bool}
-     @components: Sidebar, ContentView, ThemeToggle
+     @routes: / (multi-page SPA)
+     @state: {page:str, theme:'dark'|'light', sidebarOpen:bool}
+     @components: LeftSidebar, RightSidebar, ContentView, ThemeToggle
 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,8 @@
    spacing.unit: 0.25rem
    radius: 0.5rem
    motion: 200ms
+   sidebar.left: 240px
+   sidebar.right: 220px
 */
 :root {
   --c-pri: #3b82f6;
@@ -40,10 +42,10 @@
   --r: 0.5rem;
   --r-sm: 0.25rem;
   --m: 200ms;
-  --sidebar-w: 280px;
+  --left-w: 240px;
+  --right-w: 220px;
   --font-mono: 'Courier New', Consolas, monospace;
 }
-
 [data-theme="light"] {
   --c-bg: #ffffff;
   --c-bg-2: #f8fafc;
@@ -57,10 +59,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 32px;
-}
+html { scroll-behavior: smooth; scroll-padding-top: 32px; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.6;
@@ -69,20 +68,19 @@ body {
   transition: background var(--m), color var(--m);
 }
 
-/* @scope: Layout */
-.layout { 
-  display: flex; 
-  min-height: 100vh;
+/* @scope: Layout — three-column: left nav | content | right sidebar */
+.layout {
+  display: flex;
   justify-content: center;
+  min-height: 100vh;
 }
 .layout-inner {
   display: flex;
   width: 100%;
-  max-width: 1280px;
-  position: relative;
+  max-width: 1400px;
 }
-.sidebar {
-  width: var(--sidebar-w);
+.left-sidebar {
+  width: var(--left-w);
   background: var(--c-bg-2);
   border-right: 1px solid var(--c-border);
   position: sticky;
@@ -95,343 +93,163 @@ body {
 .main {
   flex: 1;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--sp-xl) calc(var(--sp-lg) * 2);
+  padding: var(--sp-xl) var(--sp-lg);
+  min-width: 0;
 }
-.content-wrapper {
-  width: 100%;
-  max-width: 900px;
+.right-sidebar {
+  width: var(--right-w);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: var(--sp-lg) var(--sp-md);
+  border-left: 1px solid var(--c-border);
+}
+@media (max-width: 1100px) {
+  .right-sidebar { display: none; }
 }
 @media (max-width: 768px) {
-  .sidebar {
+  .left-sidebar {
     position: fixed;
-    left: 0;
-    top: 0;
+    left: 0; top: 0;
     z-index: 100;
     transform: translateX(-100%);
   }
-  .sidebar[data-state="open"] {
-    transform: translateX(0);
-  }
-  .main {
-    padding: var(--sp-md) var(--sp-sm);
-  }
+  .left-sidebar[data-state="open"] { transform: translateX(0); }
+  .main { padding: var(--sp-md) var(--sp-sm); }
 }
 /* end @scope */
 
-/* @scope: Sidebar */
-.sidebar-header {
+/* @scope: Left Sidebar */
+.ls-header {
   padding: var(--sp-lg) var(--sp-md);
   border-bottom: 1px solid var(--c-border);
   background: var(--c-bg);
 }
-.sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--c-pri);
-  margin-bottom: var(--sp-xs);
-}
-.sidebar-subtitle {
-  font-size: 0.875rem;
-  color: var(--c-txt-dim);
-}
-.sidebar-nav {
-  padding: var(--sp-md);
-}
-.nav-section {
-  margin-bottom: var(--sp-lg);
-}
+.ls-title { font-size: 1.25rem; font-weight: 700; color: var(--c-pri); margin-bottom: var(--sp-xs); }
+.ls-subtitle { font-size: 0.8rem; color: var(--c-txt-dim); }
+.ls-nav { padding: var(--sp-md); }
+.nav-section { margin-bottom: var(--sp-lg); }
 .nav-section-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--c-txt-dim);
-  margin-bottom: var(--sp-sm);
-  letter-spacing: 0.05em;
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  color: var(--c-txt-dim); margin-bottom: var(--sp-sm); letter-spacing: 0.05em;
 }
 .nav-link {
-  display: block;
-  padding: var(--sp-xs) var(--sp-sm);
-  color: var(--c-txt-dim);
-  text-decoration: none;
-  border-radius: var(--r-sm);
-  transition: all var(--m);
-  font-size: 0.9rem;
-  margin-bottom: 2px;
+  display: block; padding: var(--sp-xs) var(--sp-sm); color: var(--c-txt-dim);
+  text-decoration: none; border-radius: var(--r-sm); transition: all var(--m);
+  font-size: 0.85rem; margin-bottom: 2px;
 }
-.nav-link:hover {
-  background: var(--c-bg-3);
-  color: var(--c-txt);
-}
+.nav-link:hover { background: var(--c-bg-3); color: var(--c-txt); }
 .nav-link[data-state="active"] {
-  background: var(--c-pri);
-  color: white;
-  font-weight: 600;
+  background: var(--c-pri); color: white; font-weight: 600;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.nav-link-sub {
-  padding-left: var(--sp-lg);
-  font-size: 0.85rem;
 }
 /* end @scope */
 
-/* @scope: Header */
-.header {
-  padding: 0 0 var(--sp-xl);
-  margin-bottom: var(--sp-xl);
-  border-bottom: 1px solid var(--c-border);
-  width: 100%;
+/* @scope: Right Sidebar */
+.rs-section { margin-bottom: var(--sp-lg); }
+.rs-title {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  color: var(--c-txt-dim); margin-bottom: var(--sp-sm); letter-spacing: 0.05em;
 }
-.header h1 {
-  font-size: 2.5rem;
-  margin-bottom: var(--sp-md);
-  line-height: 1.2;
-  color: var(--c-pri);
+.rs-link {
+  display: block; padding: 3px 0; color: var(--c-txt-dim);
+  text-decoration: none; font-size: 0.8rem; transition: color var(--m);
+  border-left: 2px solid transparent; padding-left: var(--sp-sm);
 }
-.header p {
-  font-size: 1.125rem;
-  color: var(--c-txt-dim);
-  margin-bottom: 0;
-  line-height: 1.5;
+.rs-link:hover { color: var(--c-txt); }
+.rs-link[data-state="active"] {
+  color: var(--c-pri); border-left-color: var(--c-pri); font-weight: 600;
 }
-.stats {
-  display: flex;
-  gap: var(--sp-md);
-  margin-top: var(--sp-lg);
-  flex-wrap: wrap;
+.rs-link-h3 { padding-left: var(--sp-lg); font-size: 0.75rem; }
+.rs-btn {
+  display: block; width: 100%; padding: var(--sp-sm);
+  background: var(--c-pri); color: white; border: none; border-radius: var(--r-sm);
+  font-size: 0.85rem; font-weight: 600; cursor: pointer; text-align: center;
+  transition: background var(--m); text-decoration: none; margin-bottom: var(--sp-xs);
 }
-.stat {
-  background: var(--c-bg-2);
-  border: 1px solid var(--c-border);
-  padding: var(--sp-md) var(--sp-lg);
-  border-radius: var(--r);
-  flex: 1;
-  min-width: 140px;
+.rs-btn:hover { background: #1e40af; }
+.rs-btn-outline {
+  background: transparent; border: 1px solid var(--c-border); color: var(--c-txt-dim);
 }
-.stat-num {
-  font-size: 2rem;
-  font-weight: 700;
-  display: block;
-  line-height: 1;
-  margin-bottom: var(--sp-xs);
-  color: var(--c-pri);
+.rs-btn-outline:hover { border-color: var(--c-pri); color: var(--c-pri); background: transparent; }
+.rs-file {
+  display: flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-sm);
+  color: var(--c-txt-dim); text-decoration: none; font-size: 0.8rem;
+  border-radius: var(--r-sm); transition: all var(--m); cursor: pointer;
+  background: none; border: none; width: 100%; text-align: left;
 }
-.stat-label {
-  font-size: 0.875rem;
-  color: var(--c-txt-dim);
-  line-height: 1.2;
-}
-@media (max-width: 768px) {
-  .header h1 {
-    font-size: 2rem;
-  }
-  .stat {
-    flex: 0 0 calc(50% - var(--sp-sm));
-  }
-}
+.rs-file:hover { color: var(--c-pri); background: var(--c-bg-2); }
 /* end @scope */
 
 /* @scope: Content */
-.content {
-  width: 100%;
-}
+.content { width: 100%; }
+.content h1 { font-size: 2.25rem; margin-bottom: var(--sp-md); line-height: 1.2; color: var(--c-txt); }
 .content h2 {
-  font-size: 1.875rem;
-  margin: var(--sp-xl) 0 var(--sp-md);
-  color: var(--c-pri);
-  border-bottom: 2px solid var(--c-border);
-  padding-bottom: var(--sp-sm);
+  font-size: 1.5rem; margin: var(--sp-xl) 0 var(--sp-md); color: var(--c-pri);
+  border-bottom: 2px solid var(--c-border); padding-bottom: var(--sp-sm);
 }
-.content h2:first-child {
-  margin-top: 0;
-}
-.content h3 {
-  font-size: 1.5rem;
-  margin: var(--sp-lg) 0 var(--sp-md);
-  color: var(--c-txt);
-}
-.content h4 {
-  font-size: 1.25rem;
-  margin: var(--sp-md) 0 var(--sp-sm);
-  color: var(--c-txt);
-}
-.content p {
-  margin-bottom: var(--sp-md);
-  color: var(--c-txt-dim);
-}
-.content ul, .content ol {
-  margin: var(--sp-md) 0 var(--sp-md) var(--sp-lg);
-  color: var(--c-txt-dim);
-}
-.content li {
-  margin-bottom: var(--sp-xs);
-}
-.content a {
-  color: var(--c-link);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--m);
-}
-.content a:hover {
-  border-bottom-color: var(--c-link-hover);
-}
+.content h2:first-child { margin-top: 0; }
+.content h3 { font-size: 1.25rem; margin: var(--sp-lg) 0 var(--sp-md); color: var(--c-txt); }
+.content h4 { font-size: 1.1rem; margin: var(--sp-md) 0 var(--sp-sm); color: var(--c-txt); }
+.content p { margin-bottom: var(--sp-md); color: var(--c-txt-dim); }
+.content ul, .content ol { margin: var(--sp-md) 0 var(--sp-md) var(--sp-lg); color: var(--c-txt-dim); }
+.content li { margin-bottom: var(--sp-xs); }
+.content strong { color: var(--c-txt); }
+.content a { color: var(--c-link); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color var(--m); }
+.content a:hover { border-bottom-color: var(--c-link-hover); }
 .content code {
-  background: var(--c-code-bg);
-  color: var(--c-acc);
-  padding: 2px 6px;
-  border-radius: var(--r-sm);
-  font-family: var(--font-mono);
-  font-size: 0.9em;
+  background: var(--c-code-bg); color: var(--c-acc); padding: 2px 6px;
+  border-radius: var(--r-sm); font-family: var(--font-mono); font-size: 0.9em;
 }
 .content pre {
-  background: var(--c-code-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r);
-  padding: var(--sp-md);
-  overflow-x: auto;
-  margin: var(--sp-md) 0;
-  line-height: 1.5;
+  background: var(--c-code-bg); border: 1px solid var(--c-border); border-radius: var(--r);
+  padding: var(--sp-md); overflow-x: auto; margin: var(--sp-md) 0; line-height: 1.5;
 }
-.content pre code {
-  background: none;
-  color: var(--c-txt);
-  padding: 0;
-}
-.content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: var(--sp-md) 0;
-}
-.content th, .content td {
-  border: 1px solid var(--c-border);
-  padding: var(--sp-sm);
-  text-align: left;
-}
-.content th {
-  background: var(--c-bg-2);
-  font-weight: 600;
-}
-.content blockquote {
-  border-left: 4px solid var(--c-pri);
-  padding-left: var(--sp-md);
-  margin: var(--sp-md) 0;
-  color: var(--c-txt-dim);
-  font-style: italic;
-}
-.content hr {
-  border: none;
-  border-top: 1px solid var(--c-border);
-  margin: var(--sp-xl) 0;
-}
-/* end @scope */
-
-/* @scope: Controls */
-.controls {
-  position: fixed;
-  top: var(--sp-md);
-  right: var(--sp-md);
-  display: flex;
-  gap: var(--sp-sm);
-  z-index: 200;
-}
-.btn {
-  background: var(--c-bg-2);
-  border: 1px solid var(--c-border);
-  color: var(--c-txt);
-  padding: var(--sp-sm) var(--sp-md);
-  border-radius: var(--r);
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all var(--m);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-}
-.btn:hover {
-  background: var(--c-bg-3);
-  border-color: var(--c-pri);
-}
-.btn-icon {
-  width: 18px;
-  height: 18px;
-}
-.menu-btn {
-  display: none;
-}
-@media (max-width: 768px) {
-  .menu-btn {
-    display: inline-flex;
-  }
-}
+.content pre code { background: none; color: var(--c-txt); padding: 0; }
+.content table { width: 100%; border-collapse: collapse; margin: var(--sp-md) 0; }
+.content th, .content td { border: 1px solid var(--c-border); padding: var(--sp-sm); text-align: left; }
+.content th { background: var(--c-bg-2); font-weight: 600; }
+.content hr { border: none; border-top: 1px solid var(--c-border); margin: var(--sp-xl) 0; }
 /* end @scope */
 
 /* @scope: Download Bar */
 .dl-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-sm);
-  padding: var(--sp-md);
-  background: var(--c-bg-2);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r);
-  margin-bottom: var(--sp-xl);
+  display: flex; flex-wrap: wrap; gap: var(--sp-sm); padding: var(--sp-md);
+  background: var(--c-bg-2); border: 1px solid var(--c-border); border-radius: var(--r); margin-bottom: var(--sp-lg);
 }
 .dl-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  padding: var(--sp-xs) var(--sp-md);
-  background: var(--c-bg);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-sm);
-  color: var(--c-txt);
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: all var(--m);
+  display: inline-flex; align-items: center; gap: var(--sp-xs); padding: var(--sp-xs) var(--sp-md);
+  background: var(--c-bg); border: 1px solid var(--c-border); border-radius: var(--r-sm);
+  color: var(--c-txt); cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: all var(--m);
 }
-.dl-btn:hover {
-  border-color: var(--c-pri);
-  color: var(--c-pri);
+.dl-btn:hover { border-color: var(--c-pri); color: var(--c-pri); }
+.dl-btn-accent { background: var(--c-pri); border-color: var(--c-pri); color: white; }
+.dl-btn-accent:hover { background: #1e40af; color: white; }
+/* end @scope */
+
+/* @scope: Controls */
+.controls { position: fixed; top: var(--sp-md); right: var(--sp-md); display: flex; gap: var(--sp-sm); z-index: 200; }
+.btn {
+  background: var(--c-bg-2); border: 1px solid var(--c-border); color: var(--c-txt);
+  padding: var(--sp-xs) var(--sp-sm); border-radius: var(--r); cursor: pointer;
+  font-size: 0.85rem; font-weight: 500; transition: all var(--m);
+  display: inline-flex; align-items: center; gap: var(--sp-xs);
 }
-.dl-btn-accent {
-  background: var(--c-pri);
-  border-color: var(--c-pri);
-  color: white;
-}
-.dl-btn-accent:hover {
-  background: #1e40af;
-  color: white;
-}
-.dl-btn-sm {
-  font-size: 0.8rem;
-  padding: var(--sp-xs) var(--sp-sm);
-}
+.btn:hover { background: var(--c-bg-3); border-color: var(--c-pri); }
+.menu-btn { display: none; }
+@media (max-width: 768px) { .menu-btn { display: inline-flex; } }
 /* end @scope */
 
 /* @scope: Footer */
 .footer {
-  background: var(--c-bg-2);
-  border-top: 1px solid var(--c-border);
-  padding: var(--sp-lg);
-  text-align: center;
-  margin-top: var(--sp-xl);
-  width: 100%;
+  background: var(--c-bg-2); border-top: 1px solid var(--c-border);
+  padding: var(--sp-lg); text-align: center; margin-top: var(--sp-xl); width: 100%;
 }
-.footer p {
-  color: var(--c-txt-dim);
-  font-size: 0.9rem;
-}
-.footer a {
-  color: var(--c-link);
-  text-decoration: none;
-}
-.footer a:hover {
-  text-decoration: underline;
-}
+.footer p { color: var(--c-txt-dim); font-size: 0.85rem; }
+.footer a { color: var(--c-link); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
 /* end @scope */
 
 /* Syntax highlighting */
@@ -450,16 +268,14 @@ body {
 <body class="layout">
 
 <div class="layout-inner">
-<!-- @component: Sidebar
-     @props: {}
-     @emits: navigate
--->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-title">AOCS</div>
-    <div class="sidebar-subtitle">Agent-Oriented Coding Standard</div>
+
+<!-- Left Sidebar: Navigation -->
+<aside class="left-sidebar" id="left-sidebar">
+  <div class="ls-header">
+    <div class="ls-title">AOCS</div>
+    <div class="ls-subtitle">Agent-Oriented Coding Standard</div>
   </div>
-  <nav class="sidebar-nav" id="nav">
+  <nav class="ls-nav" id="nav">
     <div class="nav-section">
       <div class="nav-section-title">Standard</div>
       <a href="/" class="nav-link" data-page="overview">Overview</a>
@@ -482,135 +298,125 @@ body {
   </nav>
 </aside>
 
-<!-- @component: Main Content
-     @props: {}
-     @emits: none
--->
+<!-- Main Content -->
 <main class="main">
   <div class="controls">
-    <button class="btn menu-btn" id="menu-btn" data-action="toggle-menu">
-      <span>☰</span>
-    </button>
+    <button class="btn menu-btn" id="menu-btn" data-action="toggle-menu"><span>☰</span></button>
     <button class="btn" id="theme-btn" data-action="toggle-theme">
-      <span id="theme-icon">☀️</span>
-      <span id="theme-label">Light</span>
+      <span id="theme-icon">☀️</span><span id="theme-label">Light</span>
     </button>
   </div>
 
-  <div class="content-wrapper">
-    <article class="content" id="content">
-      <p style="text-align: center; color: var(--c-txt-dim);">Loading...</p>
-    </article>
+  <article class="content" id="content">
+    <p style="text-align:center;color:var(--c-txt-dim);">Loading...</p>
+  </article>
 
-    <footer class="footer">
-      <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
-      <p style="margin-top: var(--sp-sm);">MIT License • <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
-    </footer>
-  </div>
+  <footer class="footer">
+    <p>AOCS v0.6 — Built by Max &amp; MCP at American Virtue Academy</p>
+    <p style="margin-top:var(--sp-sm);">MIT License · <a href="https://github.com/spuddermax/aocs" target="_blank">Contribute on GitHub</a></p>
+  </footer>
 </main>
+
+<!-- Right Sidebar: Quick Start + On This Page -->
+<aside class="right-sidebar" id="right-sidebar">
+  <div class="rs-section">
+    <div class="rs-title">Quick Start</div>
+    <button class="rs-btn" data-action="download" data-file="AOCS.md">⬇ Download Base Standard</button>
+    <div class="rs-title" style="margin-top:var(--sp-md);">Add Languages</div>
+    <button class="rs-file" data-action="download" data-file="AOCS-typescript.md">📄 TypeScript</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-javascript.md">📄 JavaScript</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-html.md">📄 HTML</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-css.md">📄 CSS</button>
+    <button class="rs-file" data-action="download" data-file="AOCS-extension-protocol.md">📄 Extension Protocol</button>
+  </div>
+  <div class="rs-section" id="toc-section" style="display:none;">
+    <div class="rs-title">On This Page</div>
+    <div id="toc-links"></div>
+  </div>
+</aside>
+
 </div><!-- /layout-inner -->
 
 <script>
 // @module: AOCSSite
-// @exports: init, loadStandard, toggleTheme, navigate
+// @exports: init, loadPage, toggleTheme, navigateTo
 // @depends: none
 // @mutates: DOM, localStorage
 
 // @state-manifest: {
 //   theme: 'dark'|'light',
-//   currentPage: string,
+//   page: string,
 //   sidebarOpen: boolean,
 //   content: string
 // }
 const st={theme:'dark',page:'overview',sidebarOpen:false,content:''};
 
-// @contract: () -> void
-// @pure: false
+// --- Theme ---
+
 const initTheme=()=>{
-  const saved=localStorage.getItem('aocs-theme');
-  st.theme=saved||'dark';
+  st.theme=localStorage.getItem('aocs-theme')||'dark';
   document.documentElement.setAttribute('data-theme',st.theme);
   updateThemeBtn();
 };
-
-// @contract: () -> void
-// @pure: false
 const toggleTheme=()=>{
   st.theme=st.theme==='dark'?'light':'dark';
   document.documentElement.setAttribute('data-theme',st.theme);
   localStorage.setItem('aocs-theme',st.theme);
   updateThemeBtn();
 };
-
-// @contract: () -> void
-// @pure: false
 const updateThemeBtn=()=>{
-  const icon=document.getElementById('theme-icon');
-  const label=document.getElementById('theme-label');
-  if(st.theme==='dark'){
-    icon.textContent='☀️';
-    label.textContent='Light';
-  }else{
-    icon.textContent='🌙';
-    label.textContent='Dark';
-  }
+  const d=st.theme==='dark';
+  document.getElementById('theme-icon').textContent=d?'☀️':'🌙';
+  document.getElementById('theme-label').textContent=d?'Light':'Dark';
 };
 
-// @contract: () -> void
-// @pure: false
+// --- Menu ---
+
 const toggleMenu=()=>{
   st.sidebarOpen=!st.sidebarOpen;
-  document.getElementById('sidebar').setAttribute('data-state',st.sidebarOpen?'open':'closed');
+  document.getElementById('left-sidebar').setAttribute('data-state',st.sidebarOpen?'open':'closed');
 };
 
-// @contract: (page:string) -> Promise<void>
-// @throws: never
-// @pure: false
+// --- Page Loading ---
+
 const loadPage=async(page)=>{
   try{
     const res=await fetch(`../docs/pages/${page}.md`);
-    if(!res.ok)throw new Error('Page not found');
+    if(!res.ok)throw new Error('not found');
     const txt=await res.text();
     st.content=txt;
     st.page=page;
     renderContent(txt);
     updateNav();
+    buildTOC();
   }catch(e){
-    document.getElementById('content').innerHTML=`<p style="color: #ef4444;">Page not found. <a href="/">Return to overview</a></p>`;
+    document.getElementById('content').innerHTML='<p style="color:#ef4444;">Page not found. <a href="/" class="page-link" data-page="overview">Return to overview</a></p>';
   }
 };
 
-// @contract: (page:string) -> string|null
-// @pure: true
-const pageToFile=(page)=>{
-  const map={
-    overview:null,
-    philosophy:null,
-    conventions:null,
-    extension:'AOCS-extension-protocol.md',
-    reference:null,
-    typescript:'AOCS-typescript.md',
-    javascript:'AOCS-javascript.md',
-    html:'AOCS-html.md',
-    css:'AOCS-css.md'
-  };
-  return map[page]??null;
-};
+const pageToFile=(page)=>({
+  extension:'AOCS-extension-protocol.md',
+  typescript:'AOCS-typescript.md',
+  javascript:'AOCS-javascript.md',
+  html:'AOCS-html.md',
+  css:'AOCS-css.md'
+}[page]??null);
 
-// @contract: (md:string) -> void
-// @pure: false
+// --- Rendering ---
+
 const renderContent=(md)=>{
   let html=md2html(md);
-  // Add download bar only on pages with a downloadable file
+  // Download bar on language/extension pages
   const file=pageToFile(st.page);
   if(file){
-    const baseBtn='<button class="dl-btn" data-action="download" data-file="AOCS.md">📄 AOCS.md (base)</button>';
-    const langBtn=`<button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button>`;
-    html=`<div class="dl-bar">${baseBtn}${langBtn}</div>${html}`;
+    html=`<div class="dl-bar"><button class="dl-btn" data-action="download" data-file="AOCS.md">📄 AOCS.md (base)</button><button class="dl-btn dl-btn-accent" data-action="download" data-file="${file}">📄 ${file}</button></div>${html}`;
   }
   document.getElementById('content').innerHTML=html;
   updateNav();
-  // Setup internal page link handlers
+  bindContentLinks();
+};
+
+const bindContentLinks=()=>{
   document.querySelectorAll('.page-link').forEach(el=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
@@ -618,144 +424,83 @@ const renderContent=(md)=>{
       if(page) navigateTo(page);
     });
   });
-  // Setup download link handlers
   document.querySelectorAll('[data-action="download"]').forEach(el=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
-      const file=el.getAttribute('data-file');
-      if(file) downloadFile(file);
+      const f=el.getAttribute('data-file');
+      if(f) downloadFile(f);
     });
   });
 };
 
-// @contract: (md:string) -> string
-// @pure: true
-const md2html=(md)=>{
-  let html=md;
-  // Headers with IDs
-  html=html.replace(/^#### (.*$)/gim,(m,txt)=>`<h4 id="${slugify(txt)}">${txt}</h4>`);
-  html=html.replace(/^### (.*$)/gim,(m,txt)=>`<h3 id="${slugify(txt)}">${txt}</h3>`);
-  html=html.replace(/^## (.*$)/gim,(m,txt)=>`<h2 id="${slugify(txt)}">${txt}</h2>`);
-  html=html.replace(/^# (.*$)/gim,(m,txt)=>`<h1>${txt}</h1>`);
-  // Code blocks — highlight during parse, not after DOM insertion
-  html=html.replace(/```(\w+)?\n([\s\S]*?)```/g,(m,lang,code)=>{
-    let esc=escHtml(code);
-    if(lang==='typescript'||lang==='javascript'||lang==='js'||lang==='ts'){
-      esc=hlJS(esc);
-    }else if(lang==='css'){
-      esc=hlCSS(esc);
-    }else if(lang==='html'){
-      esc=hlHTML(esc);
-    }
-    return`<pre><code class="language-${lang||'text'}">${esc}</code></pre>`;
+// --- Right Sidebar: TOC ---
+
+const buildTOC=()=>{
+  const headings=document.querySelectorAll('.content h2[id], .content h3[id]');
+  const container=document.getElementById('toc-links');
+  const section=document.getElementById('toc-section');
+  if(headings.length<2){
+    section.style.display='none';
+    return;
+  }
+  section.style.display='';
+  container.innerHTML='';
+  headings.forEach(h=>{
+    const a=document.createElement('a');
+    a.href='#'+h.id;
+    a.className='rs-link'+(h.tagName==='H3'?' rs-link-h3':'');
+    a.textContent=h.textContent;
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const el=document.getElementById(h.id);
+      if(el){
+        const off=el.getBoundingClientRect().top+window.pageYOffset-32;
+        window.scrollTo({top:off,behavior:'smooth'});
+        history.replaceState(null,null,'#'+h.id);
+      }
+    });
+    container.appendChild(a);
   });
-  // Inline code
-  html=html.replace(/`([^`]+)`/g,'<code>$1</code>');
-  // Bold
-  html=html.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  // Italic
-  html=html.replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  // Links
-  html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,txt,href)=>{
-    // Handle download links
-    if(href.startsWith('/download/')){
-      const file=href.replace('/download/','');
-      return`<a href="#" data-action="download" data-file="${file}" class="page-link">${txt}</a>`;
+  // Scroll spy for TOC
+  const spy=()=>{
+    let cur='';
+    headings.forEach(h=>{
+      if(h.getBoundingClientRect().top<=100) cur=h.id;
+    });
+    container.querySelectorAll('.rs-link').forEach(a=>{
+      const id=a.getAttribute('href')?.slice(1);
+      a.setAttribute('data-state',id===cur?'active':'');
+    });
+  };
+  window.removeEventListener('scroll',window._tocSpy);
+  let ticking=false;
+  window._tocSpy=()=>{
+    if(!ticking){
+      requestAnimationFrame(()=>{spy();ticking=false;});
+      ticking=true;
     }
-    // Handle internal page links
-    if(href.startsWith('/')){
-      return`<a href="${href}" data-page="${href.slice(1)}" class="page-link">${txt}</a>`;
-    }
-    return`<a href="${href}" target="_blank">${txt}</a>`;
-  });
-  // Lists
-  html=html.replace(/^\- (.+)$/gim,'<li>$1</li>');
-  html=html.replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>');
-  // Paragraphs
-  html=html.replace(/\n\n/g,'</p><p>');
-  html='<p>'+html+'</p>';
-  // Tables
-  html=html.replace(/\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/g,(m,hdr,rows)=>{
-    const ths=hdr.split('|').filter(x=>x.trim()).map(x=>`<th>${x.trim()}</th>`).join('');
-    const trs=rows.trim().split('\n').map(r=>{
-      const tds=r.split('|').filter(x=>x.trim()).map(x=>`<td>${x.trim()}</td>`).join('');
-      return`<tr>${tds}</tr>`;
-    }).join('');
-    return`<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
-  });
-  // Horizontal rules
-  html=html.replace(/^---$/gm,'<hr>');
-  // Cleanup
-  html=html.replace(/<p><\/p>/g,'');
-  html=html.replace(/<p>(<h[1-6]>)/g,'$1');
-  html=html.replace(/(<\/h[1-6]>)<\/p>/g,'$1');
-  html=html.replace(/<p>(<ul>)/g,'$1');
-  html=html.replace(/(<\/ul>)<\/p>/g,'$1');
-  html=html.replace(/<p>(<table>)/g,'$1');
-  html=html.replace(/(<\/table>)<\/p>/g,'$1');
-  html=html.replace(/<p>(<pre>)/g,'$1');
-  html=html.replace(/(<\/pre>)<\/p>/g,'$1');
-  html=html.replace(/<p><hr><\/p>/g,'<hr>');
-  return html;
+  };
+  window.addEventListener('scroll',window._tocSpy);
 };
 
-// @contract: (str:string) -> string
-// @pure: true
-const slugify=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,'');
+// --- Navigation ---
 
-// @contract: (str:string) -> string
-// @pure: true
-const escHtml=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-
-// @contract: (escaped:string) -> string
-// @pure: true
-// Highlights JS/TS — input is already HTML-escaped so no attribute collisions
-const hlJS=(s)=>{
-  // Comments first (greedy, protects content from other passes)
-  s=s.replace(/(\/\/.*)$/gm,'<span class="hljs-comment">$1</span>');
-  // Strings (escaped quotes: &#039; and &quot;)
-  s=s.replace(/(&#039;[^]*?&#039;)/g,'<span class="hljs-string">$1</span>');
-  s=s.replace(/(&quot;[^]*?&quot;)/g,'<span class="hljs-string">$1</span>');
-  // Keywords (word-boundary safe)
-  s=s.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default|new|throw|typeof|void|null|undefined|true|false|Promise)\b/g,'<span class="hljs-keyword">$1</span>');
-  // Numbers
-  s=s.replace(/\b(\d+\.?\d*)\b/g,'<span class="hljs-number">$1</span>');
-  return s;
-};
-
-// @contract: (escaped:string) -> string
-// @pure: true
-const hlCSS=(s)=>{
-  s=s.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="hljs-comment">$1</span>');
-  s=s.replace(/(--[\w-]+)/g,'<span class="hljs-keyword">$1</span>');
-  s=s.replace(/\b(\d+\.?\d*(px|rem|em|%|ms|s|vh|vw)?)\b/g,'<span class="hljs-number">$1</span>');
-  s=s.replace(/(#[0-9a-fA-F]{3,8})\b/g,'<span class="hljs-string">$1</span>');
-  return s;
-};
-
-// @contract: (escaped:string) -> string
-// @pure: true
-const hlHTML=(s)=>{
-  s=s.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="hljs-comment">$1</span>');
-  s=s.replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="hljs-keyword">$2</span>');
-  s=s.replace(/([\w-]+)=(&quot;[^]*?&quot;)/g,'<span class="hljs-function">$1</span>=<span class="hljs-string">$2</span>');
-  return s;
-};
-
-// @contract: () -> void
-// @pure: false
 const updateNav=()=>{
   document.querySelectorAll('.nav-link').forEach(link=>{
     const page=link.getAttribute('data-page');
-    if(page){
-      link.setAttribute('data-state',page===st.page?'active':'');
-    }
+    if(page) link.setAttribute('data-state',page===st.page?'active':'');
   });
 };
 
-// @contract: (filename:string) -> Promise<void>
-// @throws: never
-// @pure: false
+const navigateTo=(page)=>{
+  history.pushState({page},page,`/${page==='overview'?'':page}`);
+  loadPage(page);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=768) st.sidebarOpen&&toggleMenu();
+};
+
+// --- Download ---
+
 const downloadFile=async(filename)=>{
   try{
     const res=await fetch(`../docs/standard/${filename}`);
@@ -763,65 +508,123 @@ const downloadFile=async(filename)=>{
     const blob=new Blob([txt],{type:'text/markdown'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url;
-    a.download=filename;
-    a.click();
+    a.href=url; a.download=filename; a.click();
     URL.revokeObjectURL(url);
-  }catch(e){
-    console.error('Download failed:',e);
-  }
+  }catch(e){ console.error('Download failed:',e); }
 };
 
-// @contract: (page:string) -> void
-// @pure: false
-const navigateTo=(page)=>{
-  history.pushState({page},page,`/${page==='overview'?'':page}`);
-  loadPage(page);
-  window.scrollTo({top:0,behavior:'smooth'});
-  if(window.innerWidth<=768){
-    st.sidebarOpen&&toggleMenu();
-  }
+// --- Markdown Parser ---
+
+const md2html=(md)=>{
+  let h=md;
+  h=h.replace(/^#### (.*$)/gim,(m,t)=>`<h4 id="${slug(t)}">${t}</h4>`);
+  h=h.replace(/^### (.*$)/gim,(m,t)=>`<h3 id="${slug(t)}">${t}</h3>`);
+  h=h.replace(/^## (.*$)/gim,(m,t)=>`<h2 id="${slug(t)}">${t}</h2>`);
+  h=h.replace(/^# (.*$)/gim,(m,t)=>`<h1>${t}</h1>`);
+  h=h.replace(/```(\w+)?\n([\s\S]*?)```/g,(m,lang,code)=>{
+    let e=esc(code);
+    if(/^(typescript|javascript|js|ts)$/.test(lang))e=hlJS(e);
+    else if(lang==='css')e=hlCSS(e);
+    else if(lang==='html')e=hlHTML(e);
+    return`<pre><code class="language-${lang||'text'}">${e}</code></pre>`;
+  });
+  h=h.replace(/`([^`]+)`/g,'<code>$1</code>');
+  h=h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  h=h.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  h=h.replace(/\[([^\]]+)\]\(([^)]+)\)/g,(m,txt,href)=>{
+    if(href.startsWith('/download/')){
+      const f=href.replace('/download/','');
+      return`<a href="#" data-action="download" data-file="${f}" class="page-link">${txt}</a>`;
+    }
+    if(href.startsWith('/'))return`<a href="${href}" data-page="${href.slice(1)}" class="page-link">${txt}</a>`;
+    return`<a href="${href}" target="_blank">${txt}</a>`;
+  });
+  // Checkbox list items
+  h=h.replace(/^- \[x\] (.+)$/gim,'<li>☑ $1</li>');
+  h=h.replace(/^- \[ \] (.+)$/gim,'<li>☐ $1</li>');
+  h=h.replace(/^\- (.+)$/gim,'<li>$1</li>');
+  h=h.replace(/^(\d+)\. (.+)$/gim,'<li>$2</li>');
+  // Wrap consecutive <li> in <ul>
+  h=h.replace(/((?:<li>.*<\/li>\n?)+)/g,'<ul>$1</ul>');
+  h=h.replace(/\n\n/g,'</p><p>');
+  h='<p>'+h+'</p>';
+  // Tables
+  h=h.replace(/\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/g,(m,hdr,rows)=>{
+    const ths=hdr.split('|').filter(x=>x.trim()).map(x=>`<th>${x.trim()}</th>`).join('');
+    const trs=rows.trim().split('\n').map(r=>{
+      const tds=r.split('|').filter(x=>x.trim()).map(x=>`<td>${x.trim()}</td>`).join('');
+      return`<tr>${tds}</tr>`;
+    }).join('');
+    return`<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  });
+  h=h.replace(/^---$/gm,'<hr>');
+  // Cleanup: unwrap block elements from <p> tags
+  h=h.replace(/<p><\/p>/g,'');
+  ['h[1-6]','ul','ol','table','pre','hr','div'].forEach(tag=>{
+    h=h.replace(new RegExp(`<p>(<${tag})`,'g'),'$1');
+    h=h.replace(new RegExp(`(</${tag}>)</p>`,'g'),'$1');
+  });
+  h=h.replace(/<p>(<hr>)<\/p>/g,'$1');
+  return h;
 };
 
-// @contract: () -> void
-// @pure: false
+// --- Utilities ---
+
+const slug=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,'');
+const esc=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+
+// --- Syntax Highlighting (pre-DOM, operates on escaped text) ---
+
+const hlJS=(s)=>{
+  s=s.replace(/(\/\/.*)$/gm,'<span class="hljs-comment">$1</span>');
+  s=s.replace(/(&#039;[^]*?&#039;)/g,'<span class="hljs-string">$1</span>');
+  s=s.replace(/(&quot;[^]*?&quot;)/g,'<span class="hljs-string">$1</span>');
+  s=s.replace(/\b(const|let|var|function|async|await|return|if|else|for|while|class|interface|type|import|export|from|default|new|throw|typeof|void|null|undefined|true|false|Promise|extends|super)\b/g,'<span class="hljs-keyword">$1</span>');
+  s=s.replace(/\b(\d+\.?\d*)\b/g,'<span class="hljs-number">$1</span>');
+  return s;
+};
+const hlCSS=(s)=>{
+  s=s.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="hljs-comment">$1</span>');
+  s=s.replace(/(--[\w-]+)/g,'<span class="hljs-keyword">$1</span>');
+  s=s.replace(/\b(\d+\.?\d*(px|rem|em|%|ms|s|vh|vw)?)\b/g,'<span class="hljs-number">$1</span>');
+  s=s.replace(/(#[0-9a-fA-F]{3,8})\b/g,'<span class="hljs-string">$1</span>');
+  return s;
+};
+const hlHTML=(s)=>{
+  s=s.replace(/(&lt;!--[\s\S]*?--&gt;)/g,'<span class="hljs-comment">$1</span>');
+  s=s.replace(/(&lt;\/?)([\w-]+)/g,'$1<span class="hljs-keyword">$2</span>');
+  s=s.replace(/([\w-]+)=(&quot;[^]*?&quot;)/g,'<span class="hljs-function">$1</span>=<span class="hljs-string">$2</span>');
+  return s;
+};
+
+// --- Init ---
+
 const init=()=>{
   initTheme();
-  
-  // Determine initial page from URL
   const path=window.location.pathname.replace(/^\/site\/?/,'').replace(/^\//,'');
-  const initialPage=path||'overview';
-  loadPage(initialPage);
-  
-  // Setup button handlers
+  loadPage(path||'overview');
   document.getElementById('theme-btn')?.addEventListener('click',toggleTheme);
   document.getElementById('menu-btn')?.addEventListener('click',toggleMenu);
-  
-  // Setup navigation link handlers
   document.querySelectorAll('.nav-link[data-page]').forEach(el=>{
     el.addEventListener('click',e=>{
       e.preventDefault();
-      const page=el.getAttribute('data-page');
-      if(page){
-        navigateTo(page);
-      }
+      const p=el.getAttribute('data-page');
+      if(p) navigateTo(p);
     });
   });
-  
-  // Handle browser back/forward
-  window.addEventListener('popstate',e=>{
-    const page=e.state?.page||'overview';
-    loadPage(page);
+  // Right sidebar download buttons
+  document.querySelectorAll('.right-sidebar [data-action="download"]').forEach(el=>{
+    el.addEventListener('click',e=>{
+      e.preventDefault();
+      const f=el.getAttribute('data-file');
+      if(f) downloadFile(f);
+    });
   });
+  window.addEventListener('popstate',e=>loadPage(e.state?.page||'overview'));
 };
 
-// Run on load
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded',init);
-}else{
-  init();
-}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
 </script>
-
 </body>
 </html>

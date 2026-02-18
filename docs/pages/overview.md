@@ -1,34 +1,62 @@
-# Agent-Oriented Coding Standard (AOCS)
+# Agent-Oriented Coding Standard
 
 **Version 0.6** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
 
-*A coding standard optimized for AI agent readability, token efficiency, and mechanical enforcement.*
+Write code optimized for AI agents. **25-40% fewer tokens.** Drop-in markdown files for your project.
 
 ---
 
-## The Problem
+## Get Started in 60 Seconds
 
-As AI agents write more code, your codebase becomes their working memory — and right now we're padding that memory with information optimized for humans who may never read it again.
+### 1. Download the files
 
-## The Solution
+Grab the base standard, then add your languages:
 
-**AOCS** separates specification from implementation:
+- [⬇ AOCS.md (base standard)](/download/AOCS.md) — required for all projects
+- [⬇ AOCS-typescript.md](/download/AOCS-typescript.md)
+- [⬇ AOCS-javascript.md](/download/AOCS-javascript.md)
+- [⬇ AOCS-html.md](/download/AOCS-html.md)
+- [⬇ AOCS-css.md](/download/AOCS-css.md)
 
-- **Specification layer**: formal contracts, manifests, and invariants in machine-parseable annotations
-- **Implementation layer**: compressed, semantically dense code optimized for brevity
+### 2. Drop them in your project
 
-Humans read specifications. Agents read both, but the implementation can be orders of magnitude more concise.
+```
+your-project/
+├── AGENTS.md
+├── docs/
+│   ├── AOCS.md              ← base standard
+│   ├── AOCS-typescript.md   ← your language(s)
+│   └── AOCS-css.md
+└── src/
+```
 
-## Measured Impact
+### 3. Reference from AGENTS.md
+
+```markdown
+## Coding Standard
+Follow the AOCS standard:
+- docs/AOCS.md (base conventions)
+- docs/AOCS-typescript.md (TypeScript rules)
+```
+
+Don't paste the full standard into AGENTS.md — context is scarce. Point to the files.
+
+**That's it.** Your agents now have a formal coding standard optimized for their workflow.
+
+---
+
+## What You Get
 
 | Metric | Savings |
 |--------|---------|
-| Generation tokens (agent writing code) | 20-35% |
-| Context tokens (agent reading codebase) | 40-60% |
+| Generation tokens (agent writing) | 20-35% |
+| Context tokens (agent reading) | 40-60% |
 | Reasoning tokens (agent thinking) | 15-25% |
 | **Overall** | **25-40%** |
 
-## Quick Example
+---
+
+## See the Difference
 
 **Human-readable — 180 tokens:**
 
@@ -65,53 +93,32 @@ const pp=async(o:O,pm:PM):Promise<PR>=>{
 }
 ```
 
-**58% fewer tokens.** Now multiply that across a 10,000 line codebase an agent reads dozens of times a day.
+**58% fewer tokens** on a single function. Multiply across your entire codebase.
 
-## How to Adopt AOCS
+---
 
-### 1. Download the files you need
+## How It Works
 
-Grab the **base standard** plus the language files for your stack:
+AOCS separates **specification** from **implementation**:
 
-- **[AOCS.md](/download/AOCS.md)** — Base standard (required)
-- **[AOCS-typescript.md](/download/AOCS-typescript.md)** — TypeScript
-- **[AOCS-javascript.md](/download/AOCS-javascript.md)** — JavaScript
-- **[AOCS-html.md](/download/AOCS-html.md)** — HTML
-- **[AOCS-css.md](/download/AOCS-css.md)** — CSS
-- **[AOCS-extension-protocol.md](/download/AOCS-extension-protocol.md)** — Create your own language definition
+- **Specification layer**: formal `@contract` annotations that declare inputs, outputs, errors, and side effects
+- **Implementation layer**: compressed code optimized for brevity
 
-### 2. Drop them in your project
+Humans read the contracts. Agents read both — but the implementation can be dramatically shorter.
 
-```
-your-project/
-├── AGENTS.md
-├── docs/
-│   ├── AOCS.md
-│   ├── AOCS-typescript.md
-│   └── AOCS-css.md
-└── src/
-```
+## Learn More
 
-### 3. Reference from AGENTS.md
-
-```markdown
-## Coding Standard
-Follow the AOCS standard:
-- docs/AOCS.md (base conventions)
-- docs/AOCS-typescript.md (TypeScript rules)
-```
-
-Don't paste the full standard into AGENTS.md — context is scarce. Point to the files.
-
-## Read the Standard
-
-- [Part I: Core Philosophy](/philosophy) — Principles and motivation
-- [Part II: Universal Conventions](/conventions) — U1-U7: the rules that apply to every language
-- [Part III: Extension Protocol](/extension) — How to bootstrap AOCS for any new language
+- [Part I: Philosophy](/philosophy) — Why this works and the five core principles
+- [Part II: Conventions](/conventions) — The seven universal rules (U1-U7)
+- [Part III: Extension Protocol](/extension) — Bootstrap AOCS for any new language
 
 ## Language Definitions
 
-- [TypeScript](/typescript) — Reference implementation
-- [JavaScript](/javascript) — State and behavior patterns
-- [HTML](/html) — Structure and semantics
-- [CSS](/css) — Design tokens and scope
+- [TypeScript](/typescript) — Reference implementation with full examples
+- [JavaScript](/javascript) — State management and DOM patterns
+- [HTML](/html) — Semantic structure and data attribute contracts
+- [CSS](/css) — Design tokens and scoped styling
+
+## Using a Language Not Listed?
+
+Download the [Extension Protocol](/download/AOCS-extension-protocol.md) and any agent can create a new `AOCS-{language}.md` file autonomously. See the [full protocol](/extension) for details.
