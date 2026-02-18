@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # Part I: Core Philosophy
 
 ## The Problem

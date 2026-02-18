@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # AOCS: TypeScript
 
 *Language extension for the [Agent-Oriented Coding Standard](./AOCS.md).*

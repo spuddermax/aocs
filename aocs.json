@@ -1,0 +1,12 @@
+{
+  "aocsVersion": "0.7",
+  "languages": ["html", "css", "javascript"],
+  "modulePattern": "agent-module",
+  "stateOwnership": "local-only",
+  "sideEffects": "explicit",
+  "namingSchema": "verbNoun",
+  "allowedPatterns": ["pure-functions", "fsm"],
+  "forbiddenPatterns": ["implicit-global", "dynamic-eval", "magic-strings", "reflection"],
+  "mode": "strict",
+  "roles": ["pure-logic", "ui-binding", "config", "io-boundary"]
+}

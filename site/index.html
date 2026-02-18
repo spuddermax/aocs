@@ -5,6 +5,9 @@
      @routes: / (multi-page SPA)
      @state: {page:str, theme:'dark'|'light', sidebarOpen:bool}
      @components: LeftSidebar, RightSidebar, ContentView, ThemeToggle
+     AOCS-ROLE: ui-binding
+     AOCS-INPUTS: markdown files (docs/pages/*.md)
+     AOCS-OUTPUTS: rendered HTML documentation
 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -385,6 +388,8 @@ const BASE = location.pathname.startsWith('/site') ? '..' : '.';
 // --- Theme ---
 
 // @contract: () -> void | initializes theme from localStorage, sets DOM attribute
+// AOCS-PURE: false
+// AOCS-INVARIANT: DOM data-theme matches st.theme after call
 const initTheme=()=>{
   st.theme=localStorage.getItem('aocs-theme')||'dark';
   document.documentElement.setAttribute('data-theme',st.theme);
@@ -416,6 +421,8 @@ const toggleMenu=()=>{
 // --- Page Loading ---
 
 // @contract: (page:str) -> Promise<void> | fetches and renders markdown page, updates nav and TOC
+// AOCS-PURE: false
+// AOCS-FAILS-ON: network error, missing page
 const loadPage=async(page)=>{
   try{
     const res=await fetch(`${BASE}/docs/pages/${page}.md`);
@@ -504,6 +511,7 @@ const buildTOC=()=>{
     container.appendChild(a);
   });
   // Scroll spy for TOC
+  // @contract: () -> void | updates active TOC link based on scroll position
   const spy=()=>{
     let cur='';
     headings.forEach(h=>{
@@ -546,6 +554,8 @@ const navigateTo=(page)=>{
 // --- Download ---
 
 // @contract: (filename:str) -> Promise<void> | fetches file from docs/standard and triggers browser download
+// AOCS-PURE: false
+// AOCS-FAILS-ON: network error, missing file
 const downloadFile=async(filename)=>{
   try{
     const res=await fetch(`${BASE}/docs/standard/${filename}`);
@@ -561,6 +571,8 @@ const downloadFile=async(filename)=>{
 // --- Markdown Parser ---
 
 // @contract: (md:str) -> str | converts markdown to HTML with syntax highlighting
+// AOCS-PURE: true
+// AOCS-INVARIANT: output is valid HTML string
 const md2html=(md)=>{
   let h=md;
   h=h.replace(/^#### (.*$)/gim,(m,t)=>`<h4 id="${slug(t)}">${t}</h4>`);
@@ -617,8 +629,12 @@ const md2html=(md)=>{
 // --- Utilities ---
 
 // @contract: (s:str) -> str | converts string to URL-safe slug
+// AOCS-PURE: true
+// AOCS-INVARIANT: output contains only [a-z0-9-]
 const slug=(s)=>s.toLowerCase().trim().replace(/[^\w\s-]/g,'').replace(/[\s_]+/g,'-').replace(/^-+|-+$/g,'');
 // @contract: (s:str) -> str | escapes HTML entities
+// AOCS-PURE: true
+// AOCS-INVARIANT: output has no unescaped HTML entities
 const esc=s=>s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 
 // --- Syntax Highlighting (pre-DOM, operates on escaped text) ---

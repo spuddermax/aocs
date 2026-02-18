@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # Part II: Universal Conventions
 
 These conventions apply to all languages.

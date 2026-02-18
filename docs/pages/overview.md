@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # Agent-Oriented Coding Standard
 
 **Version 0.7** · [GitHub](https://github.com/spuddermax/aocs) · MIT License

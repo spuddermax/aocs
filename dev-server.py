@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# AOCS-ROLE: io-boundary
+# AOCS-INPUTS: HTTP requests
+# AOCS-OUTPUTS: HTTP responses (static files)
 """AOCS dev server — redirects / to /site/, serves files from project root."""
 import http.server
 import os

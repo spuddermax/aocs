@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # AOCS: Language Extension Protocol
 
 *Part of the [Agent-Oriented Coding Standard](./AOCS.md).*

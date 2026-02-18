@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # Quick Reference
 
 **Part I: Core Philosophy**  

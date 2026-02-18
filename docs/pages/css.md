@@ -1,3 +1,4 @@
+<!-- AOCS-ROLE: config -->
 # AOCS: CSS
 
 *Language extension for the [Agent-Oriented Coding Standard](./AOCS.md).*
