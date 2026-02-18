@@ -1,0 +1,44 @@
+{
+  "name": "AOCS — Agent-Oriented Coding Standard",
+  "version": "0.8",
+  "repository": "https://github.com/spuddermax/aocs",
+  "website": "https://aocs.pages.dev",
+  "license": "MIT",
+  "files": {
+    "base": "docs/standard/AOCS.md",
+    "schema": "docs/standard/aocs-schema.json",
+    "agentReadme": "docs/standard/README.agent.md",
+    "extensionProtocol": "docs/standard/AOCS-extension-protocol.md",
+    "languages": {
+      "typescript": "docs/standard/AOCS-typescript.md",
+      "javascript": "docs/standard/AOCS-javascript.md",
+      "html": "docs/standard/AOCS-html.md",
+      "css": "docs/standard/AOCS-css.md",
+      "python": "docs/standard/AOCS-python.md",
+      "go": "docs/standard/AOCS-go.md",
+      "rust": "docs/standard/AOCS-rust.md"
+    }
+  },
+  "versions": [
+    {
+      "version": "0.8",
+      "date": "2026-02-18",
+      "changes": "CLI validator, Python/Go/Rust languages, stable API endpoints"
+    },
+    {
+      "version": "0.7",
+      "date": "2026-02-18",
+      "changes": "Machine-first contracts: aocs.json, semantic roles, structured hints, edit-locality, forbidden patterns, agent-first README"
+    },
+    {
+      "version": "0.6",
+      "date": "2026-02-18",
+      "changes": "Initial public release with TypeScript, JavaScript, HTML, CSS"
+    }
+  ],
+  "api": {
+    "manifest": "/manifest.json",
+    "raw": "/raw/{version}/{filename}",
+    "latest": "/raw/latest/{filename}"
+  }
+}

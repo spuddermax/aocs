@@ -1,5 +1,5 @@
 {
-  "aocsVersion": "0.7",
+  "aocsVersion": "0.8",
   "languages": ["html", "css", "javascript"],
   "modulePattern": "agent-module",
   "stateOwnership": "local-only",

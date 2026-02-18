@@ -1,0 +1,11 @@
+# AOCS Stable API — versioned and latest raw file access
+# Cloudflare Pages _redirects format
+
+# Latest aliases
+/raw/latest/*  /docs/standard/:splat  200
+/raw/v0.8/*    /docs/standard/:splat  200
+/raw/v0.7/*    /docs/standard/:splat  200
+/raw/v0.6/*    /docs/standard/:splat  200
+
+# Manifest shortcut
+/api/manifest  /manifest.json  200

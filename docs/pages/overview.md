@@ -1,7 +1,7 @@
 <!-- AOCS-ROLE: config -->
 # Agent-Oriented Coding Standard
 
-**Version 0.7** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
+**Version 0.8** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
 
 Write code optimized for AI agents. **30-50% fewer tokens.** Drop-in markdown files for your project.
 
@@ -148,3 +148,46 @@ Humans read the contracts. Agents read both — but the implementation can be dr
 ## Using a Language Not Listed?
 
 Download the [Extension Protocol](/download/AOCS-extension-protocol.md) and any agent can create a new `AOCS-{language}.md` file autonomously. See the [full protocol](/extension) for details.
+
+---
+
+## Stable API
+
+Agents can fetch AOCS files programmatically at predictable URLs. No scraping required.
+
+### Manifest
+
+```
+GET /manifest.json
+```
+
+Returns the full file index, version history, and API documentation. Load this first.
+
+### Raw Files (versioned)
+
+```
+GET /raw/latest/AOCS.md
+GET /raw/latest/AOCS-python.md
+GET /raw/latest/aocs-schema.json
+GET /raw/v0.8/AOCS-typescript.md
+```
+
+Pin to a version (`/raw/v0.8/`) or track latest (`/raw/latest/`).
+
+### Example: Agent Bootstrap
+
+```python
+# Fetch the manifest
+manifest = fetch("https://aocs.pages.dev/manifest.json").json()
+
+# Download the base standard + your language
+base = fetch(f"https://aocs.pages.dev/raw/latest/{manifest['files']['base']}").text()
+lang = fetch(f"https://aocs.pages.dev/raw/latest/{manifest['files']['languages']['python']}").text()
+```
+
+### CLI Validation
+
+```bash
+npx aocs validate        # validate current project
+npx aocs init            # scaffold aocs.json + README.agent.md
+```

@@ -1,6 +1,6 @@
 # Agent-Oriented Coding Standard (AOCS)
 
-**Version 0.7** · [aocs.dev](https://github.com/spuddermax/aocs) · MIT License
+**Version 0.8** · [aocs.dev](https://github.com/spuddermax/aocs) · MIT License
 
 *A coding standard optimized for AI agent readability, token efficiency, and mechanical enforcement.*
 
@@ -157,7 +157,7 @@ Every AOCS-compliant repo includes an `aocs.json` at root — a machine-parseabl
 
 ```json
 {
-  "aocsVersion": "0.7",
+  "aocsVersion": "0.8",
   "languages": ["typescript"],
   "modulePattern": "agent-module",
   "stateOwnership": "local-only",
@@ -328,6 +328,7 @@ your-project/
 
 ## Version History
 
+- **v0.8** — CLI validator (`aocs validate`), Python/Go/Rust language extensions, stable API endpoints, manifest.json
 - **v0.7** — Added repository contracts (aocs.json), semantic file roles, structured hints, edit-locality, forbidden patterns, agent-first README
 - **v0.6** — Integrated OpenAI Harness Engineering principles; restructured as distributable files
 - **v0.5** — Restructured: Philosophy → Conventions → Extension Protocol → Language Definitions
