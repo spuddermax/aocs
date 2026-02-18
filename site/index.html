@@ -8,6 +8,7 @@
 -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>var SITE_BASE=location.pathname.startsWith('/site')?'/site/':'/';document.write('<base href="'+SITE_BASE+'"/>')</script>
 <script src="assets/lucide.min.js"></script>
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="32x32">
@@ -319,7 +320,7 @@ body {
     </div>
   </nav>
   <div class="ls-footer" id="site-footer">
-    <p>AOCS v0.6</p>
+    <p>AOCS v0.7</p>
     <p>Built by Max &amp; MCP</p>
     <p><a href="https://github.com/spuddermax/aocs" target="_blank"><i data-lucide="github" class="footer-icon"></i>GitHub</a> · MIT License</p>
   </div>
@@ -346,6 +347,9 @@ body {
   <div class="rs-section">
     <div class="rs-title">Quick Start</div>
     <button class="rs-btn" data-action="download" data-file="AOCS.md"><i data-lucide="download" class="btn-icon"></i>Download Base Standard</button>
+    <div class="rs-title" style="margin-top:var(--sp-md);">v0.7 Files</div>
+    <button class="rs-file" data-action="download" data-file="aocs-schema.json"><i data-lucide="file-text" class="btn-icon"></i>aocs-schema.json</button>
+    <button class="rs-file" data-action="download" data-file="README.agent.md"><i data-lucide="file-text" class="btn-icon"></i>README.agent.md</button>
     <div class="rs-title" style="margin-top:var(--sp-md);">Add Languages</div>
     <button class="rs-file" data-action="download" data-file="AOCS-typescript.md"><i data-lucide="file-text" class="btn-icon"></i>TypeScript</button>
     <button class="rs-file" data-action="download" data-file="AOCS-javascript.md"><i data-lucide="file-text" class="btn-icon"></i>JavaScript</button>

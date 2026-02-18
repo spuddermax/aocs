@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AOCS Repository Contract",
+  "description": "Machine-parseable contract for AOCS-compliant repositories",
+  "type": "object",
+  "required": ["aocsVersion", "languages", "mode"],
+  "properties": {
+    "aocsVersion": {
+      "type": "string",
+      "description": "AOCS version this repo follows"
+    },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Languages used in this repo"
+    },
+    "modulePattern": {
+      "type": "string",
+      "enum": ["agent-module", "traditional", "hybrid"],
+      "description": "Module organization pattern"
+    },
+    "stateOwnership": {
+      "type": "string",
+      "enum": ["local-only", "shared-explicit", "global-allowed"],
+      "description": "State mutation policy"
+    },
+    "sideEffects": {
+      "type": "string",
+      "enum": ["explicit", "implicit-allowed"],
+      "description": "Side effect declaration policy"
+    },
+    "namingSchema": {
+      "type": "string",
+      "enum": ["verbNoun", "nounVerb", "free"],
+      "description": "Function naming grammar"
+    },
+    "allowedPatterns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Architectural patterns permitted"
+    },
+    "forbiddenPatterns": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Patterns agents must never generate"
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["lite", "strict"],
+      "description": "AOCS enforcement level"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["pure-logic", "state-machine", "adapter", "ui-binding", "io-boundary", "config"]
+      },
+      "description": "File roles used in this repo"
+    }
+  }
+}

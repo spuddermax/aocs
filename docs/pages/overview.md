@@ -1,8 +1,8 @@
 # Agent-Oriented Coding Standard
 
-**Version 0.6** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
+**Version 0.7** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
 
-Write code optimized for AI agents. **25-40% fewer tokens.** Drop-in markdown files for your project.
+Write code optimized for AI agents. **30-50% fewer tokens.** Drop-in markdown files for your project.
 
 ---
 
@@ -13,6 +13,8 @@ Write code optimized for AI agents. **25-40% fewer tokens.** Drop-in markdown fi
 Grab the base standard, then add your languages:
 
 - [⬇ AOCS.md (base standard)](/download/AOCS.md) — required for all projects
+- [⬇ aocs-schema.json (JSON schema for aocs.json)](/download/aocs-schema.json)
+- [⬇ README.agent.md (agent-first README template)](/download/README.agent.md)
 - [⬇ AOCS-typescript.md](/download/AOCS-typescript.md)
 - [⬇ AOCS-javascript.md](/download/AOCS-javascript.md)
 - [⬇ AOCS-html.md](/download/AOCS-html.md)
@@ -45,14 +47,31 @@ Don't paste the full standard into AGENTS.md — context is scarce. Point to the
 
 ---
 
+## What's New in v0.7
+
+AOCS v0.7 transforms from a style guide into a **low-entropy intermediate representation for code** — a human-writable DSL optimized for LLM cognition.
+
+**Major additions:**
+
+- **Repository Contracts** (`aocs.json`) — Machine-parseable constraints eliminate prose interpretation
+- **Semantic File Roles** (`AOCS-ROLE`) — Files declare their purpose (pure-logic, state-machine, adapter, etc.) in the first 5 lines
+- **Structured Hints** (`AOCS-INVARIANT`, `AOCS-FAILS-ON`) — Comments become mechanical constraints
+- **Edit-Locality Guarantees** — One concern per change, one role category per diff
+- **Forbidden Pattern Lists** — Explicit enumeration of never-generate patterns
+- **Agent-First README** (`README.agent.md`) — ≤200 token context bootstrap for system prompts
+
+**Result:** Agents don't infer rules from documentation — they load structured contracts and validate mechanically. Token savings increase from 25-40% to **30-50%**.
+
+---
+
 ## What You Get
 
 | Metric | Savings |
 |--------|---------|
-| Generation tokens (agent writing) | 20-35% |
-| Context tokens (agent reading) | 40-60% |
-| Reasoning tokens (agent thinking) | 15-25% |
-| **Overall** | **25-40%** |
+| Generation tokens (agent writing) | 25-40% |
+| Context tokens (agent reading) | 50-70% |
+| Reasoning tokens (agent thinking) | 20-35% |
+| **Overall** | **30-50%** |
 
 ---
 

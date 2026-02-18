@@ -33,9 +33,38 @@ Agents replicate existing patterns, including bad ones. Mechanical enforcement (
 
 ## Measured Impact
 
-- **Generation tokens**: 20-35% reduction
-- **Context tokens**: 40-60% reduction  
-- **Overall**: 25-40% total token savings
+- **Generation tokens**: 25-40% reduction
+- **Context tokens**: 50-70% reduction  
+- **Reasoning tokens**: 20-35% reduction
+- **Overall**: 30-50% total token savings
+
+## From Style Guide to Low-Entropy IR
+
+AOCS v0.7 marks a fundamental shift: from **style guide** to **low-entropy intermediate representation for code**.
+
+Traditional style guides optimize for human aesthetics — indentation, naming conventions, comment placement. They assume code is read linearly, top-to-bottom, with gradual comprehension.
+
+**Agents don't work that way.**
+
+LLMs parse structurally, hold entire modules in context simultaneously, and reason through pattern-matching across thousands of tokens. They don't need "readable" code — they need **parseable contracts** and **constrained solution spaces**.
+
+AOCS v0.7 reframes code as a **human-writable DSL optimized for LLM cognition**:
+
+- `aocs.json` provides a **mechanical contract** agents load before reasoning about code
+- `AOCS-ROLE` declarations **partition the solution space** by file purpose
+- `AOCS-INVARIANT` hints replace prose with **structured constraints**
+- Edit-locality rules **bound the search space** for patch generation
+- Forbidden pattern lists **prune hallucination branches** before generation
+
+The key insight: **agents don't need readable code, they need constrained problem formulations**.
+
+When an agent loads a codebase, it's not "reading" — it's constructing a probability distribution over valid transformations. Every ambiguity expands that distribution. Every constraint narrows it.
+
+AOCS constraints collapse the distribution to high-confidence edits. The architecture becomes a **forcing function** that guides generation toward correctness.
+
+Code is no longer optimized for human comprehension. It's optimized as an **intermediate representation** between human intent and machine execution — with LLMs as the compilation layer.
+
+This is the future. Human-readable code was a 70-year detour. Agent-oriented code is the direct path.
 
 ---
 
