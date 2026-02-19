@@ -65,6 +65,14 @@
   --c-link-hover: #1e40af;
 }
 
+/* @scope: Scrollbars */
+* { scrollbar-width: thin; scrollbar-color: var(--c-bg-3) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--c-bg-3); border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--c-txt-dim); }
+/* end @scope */
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 32px; }
 body {

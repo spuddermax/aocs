@@ -13,11 +13,14 @@
 
 ### 1. Download the files
 
-Grab the base standard, then add your languages:
+**Core (required):**
 
-- [⬇ AOCS.md (base standard)](/download/AOCS.md) — required for all projects
-- [⬇ aocs-schema.json (JSON schema for aocs.json)](/download/aocs-schema.json)
-- [⬇ README.agent.md (agent-first README template)](/download/README.agent.md)
+- [⬇ AOCS.md](/download/AOCS.md) — base standard
+- [⬇ aocs-schema.json](/download/aocs-schema.json) — JSON schema for aocs.json
+- [⬇ README.agent.md](/download/README.agent.md) — agent-first README template
+
+**Languages (pick yours):**
+
 - [⬇ AOCS-typescript.md](/download/AOCS-typescript.md)
 - [⬇ AOCS-javascript.md](/download/AOCS-javascript.md)
 - [⬇ AOCS-python.md](/download/AOCS-python.md)
@@ -31,9 +34,12 @@ Grab the base standard, then add your languages:
 ```
 your-project/
 ├── AGENTS.md
+├── aocs.json                  ← repo contract (create via aocs init)
+├── README.agent.md            ← agent-first README
 ├── docs/
-│   ├── AOCS.md              ← base standard
-│   ├── AOCS-typescript.md   ← your language(s)
+│   ├── AOCS.md                ← base standard
+│   ├── aocs-schema.json       ← schema for aocs.json
+│   ├── AOCS-typescript.md     ← your language(s)
 │   └── AOCS-css.md
 └── src/
 ```
