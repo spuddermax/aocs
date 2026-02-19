@@ -32,9 +32,9 @@ Do **not** paste the full standard into your AGENTS.md. Context is a scarce reso
 
 ### The Problem
 
-Human-readable code optimizes for scanning, narrative flow, and gradual comprehension. AI agents parse structurally, hold thousands of lines in context simultaneously, and reason about intent through pattern-matching across entire codebases. Traditional readability conventions — verbose variable names, explanatory comments, whitespace scaffolding — impose token costs without providing information agents can't already infer.
+The real cost isn't tokens — it's **ambiguity**. When agents guess about intent, state ownership, or allowed patterns, they hallucinate, generate sprawling diffs, and break things.
 
-As AI agents write more code, codebases become agent working memory. Every unnecessary token is real cost and real latency.
+Human-readable code optimizes for scanning and narrative flow. AI agents parse structurally and reason through pattern-matching across entire codebases. What agents need isn't more words — it's **explicit contracts** that eliminate guessing.
 
 ### The Solution
 
@@ -50,8 +50,8 @@ Humans read specifications. Agents read both, but the implementation can be orde
 **P1. Contracts over comments**
 Replace prose docstrings with formal `@contract` annotations that declare inputs, outputs, preconditions, postconditions, and side effects in structured notation.
 
-**P2. Compression over verbosity**
-Favor terse expressions, single-letter loop variables, and abbreviated names — but only in implementation. Specifications remain human-legible.
+**P2. Compression over verbosity (optional)**
+Where appropriate, favor concise expressions in implementation — but never at the cost of human debuggability. Compression is secondary to contracts. The real savings come from eliminating ambiguity — fewer clarification turns, smaller diffs, fewer retries.
 
 **P3. Enforce boundaries centrally, allow autonomy locally**
 Module contracts, data shapes, and architectural boundaries are non-negotiable and mechanically enforced. Within those boundaries, agents have full discretion over implementation style.
@@ -64,12 +64,16 @@ Agents replicate existing patterns, including bad ones. Mechanical enforcement (
 
 ### Measured Impact
 
+Structured contracts improve reasoning quality — and yes, they also save tokens:
+
 | Metric | Savings |
 |--------|---------|
 | Generation tokens (agent writing code) | 25-40% |
 | Context tokens (agent reading codebase) | 50-70% |
 | Reasoning tokens (agent thinking) | 20-35% |
 | **Overall** | **30-50%** |
+
+*Measured on small examples. Real-world savings vary by codebase, workflow, and model. The primary benefit is reasoning quality, not token count.*
 
 ---
 

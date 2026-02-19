@@ -3,7 +3,9 @@
 
 **Version 0.8** · [GitHub](https://github.com/spuddermax/aocs) · MIT License
 
-Write code optimized for AI agents. **30-50% fewer tokens.** Drop-in markdown files for your project.
+**Structured contracts that make your codebase machine-readable.** Drop-in markdown files for your project.
+
+⚠️ **Early Stage** — AOCS v0.8 is an early-stage standard seeking real-world validation. The ideas are battle-ready; the ecosystem is young.
 
 ---
 
@@ -51,51 +53,24 @@ Don't paste the full standard into AGENTS.md — context is scarce. Point to the
 
 ---
 
-## What's New in v0.8
+## Why AOCS?
 
-AOCS v0.8 makes the standard **enforceable infrastructure** — not just rules, but tooling that mechanically validates compliance.
+Agents reason better with explicit contracts than by inferring intent from code. AOCS gives agents machine-readable metadata — file roles, function contracts, invariants, forbidden patterns — so they stop guessing and start validating.
 
-**Major additions:**
+As context windows grow, the value of token compression fades, but structured contracts remain essential. AOCS helps agents:
 
-- **CLI Validator** (`aocs validate`) — Zero-dependency Node.js linter that checks aocs.json, file roles, contracts, hints, and forbidden patterns. Pluggable language modules loaded from your config. Run `npx aocs validate` in any AOCS project.
-- **`aocs init`** — Interactive scaffolding that generates `aocs.json` and `README.agent.md` for new projects
-- **Python, Go, Rust** — Three new language extensions with idiomatic examples, compression patterns, and before/after token comparisons
-- **Stable API Endpoints** — Agents fetch files at `/raw/latest/AOCS.md` or pin to `/raw/v0.8/AOCS.md`. `/manifest.json` provides the full file index.
-- **Self-Compliance** — The AOCS repo itself passes `aocs validate` with zero failures
+- **Understand intent** without reading implementation
+- **Validate changes** against explicit constraints
+- **Navigate codebases** via semantic file roles
+- **Avoid hallucinations** through forbidden pattern lists
 
-**The litmus test:** An agent can now clone a repo, read `README.agent.md`, parse `aocs.json`, run `aocs validate`, and reliably generate compliant code. AOCS is no longer a style guide — it's infrastructure.
-
----
-
-## What's New in v0.7
-
-AOCS v0.7 transforms from a style guide into a **low-entropy intermediate representation for code** — a human-writable DSL optimized for LLM cognition.
-
-**Major additions:**
-
-- **Repository Contracts** (`aocs.json`) — Machine-parseable constraints eliminate prose interpretation
-- **Semantic File Roles** (`AOCS-ROLE`) — Files declare their purpose (pure-logic, state-machine, adapter, etc.) in the first 5 lines
-- **Structured Hints** (`AOCS-INVARIANT`, `AOCS-FAILS-ON`) — Comments become mechanical constraints
-- **Edit-Locality Guarantees** — One concern per change, one role category per diff
-- **Forbidden Pattern Lists** — Explicit enumeration of never-generate patterns
-- **Agent-First README** (`README.agent.md`) — ≤200 token context bootstrap for system prompts
-
-**Result:** Agents don't infer rules from documentation — they load structured contracts and validate mechanically. Token savings increase from 25-40% to **30-50%**.
-
----
-
-## What You Get
-
-| Metric | Savings |
-|--------|---------|
-| Generation tokens (agent writing) | 25-40% |
-| Context tokens (agent reading) | 50-70% |
-| Reasoning tokens (agent thinking) | 20-35% |
-| **Overall** | **30-50%** |
+The compression layer is a bonus. The contract layer is the foundation.
 
 ---
 
 ## See the Difference
+
+One example of how AOCS transforms code:
 
 **Human-readable — 180 tokens:**
 
@@ -133,6 +108,21 @@ const pp=async(o:O,pm:PM):Promise<PR>=>{
 ```
 
 **58% fewer tokens** on a single function. Multiply across your entire codebase.
+
+---
+
+## Measured Impact
+
+Structured contracts improve reasoning quality, and yes — they also save tokens:
+
+| Metric | Savings |
+|--------|---------|
+| Generation tokens (agent writing) | 25-40% |
+| Context tokens (agent reading) | 50-70% |
+| Reasoning tokens (agent thinking) | 20-35% |
+| **Overall** | **30-50%** |
+
+*Measured on small examples. Real-world savings vary by codebase, workflow, and model. The primary benefit is reasoning quality, not token count.*
 
 ---
 
@@ -207,3 +197,34 @@ lang = fetch(f"https://aocs.pages.dev/raw/latest/{manifest['files']['languages']
 npx aocs validate        # validate current project
 npx aocs init            # scaffold aocs.json + README.agent.md
 ```
+
+---
+
+## What's New in v0.8
+
+AOCS v0.8 makes the standard **enforceable infrastructure** — not just rules, but tooling that mechanically validates compliance.
+
+**Major additions:**
+
+- **CLI Validator** (`aocs validate`) — Zero-dependency Node.js linter that checks aocs.json, file roles, contracts, hints, and forbidden patterns. Pluggable language modules loaded from your config. Run `npx aocs validate` in any AOCS project.
+- **`aocs init`** — Interactive scaffolding that generates `aocs.json` and `README.agent.md` for new projects
+- **Python, Go, Rust** — Three new language extensions with idiomatic examples, compression patterns, and before/after token comparisons
+- **Stable API Endpoints** — Agents fetch files at `/raw/latest/AOCS.md` or pin to `/raw/v0.8/AOCS.md`. `/manifest.json` provides the full file index.
+- **Self-Compliance** — The AOCS repo itself passes `aocs validate` with zero failures
+
+**The litmus test:** An agent can now clone a repo, read `README.agent.md`, parse `aocs.json`, run `aocs validate`, and reliably generate compliant code. AOCS is no longer a style guide — it's infrastructure.
+
+---
+
+## What's New in v0.7
+
+AOCS v0.7 transformed from a style guide into a **low-entropy intermediate representation for code** — a human-writable DSL optimized for LLM cognition.
+
+**Major additions:**
+
+- **Repository Contracts** (`aocs.json`) — Machine-parseable constraints eliminate prose interpretation
+- **Semantic File Roles** (`AOCS-ROLE`) — Files declare their purpose (pure-logic, state-machine, adapter, etc.) in the first 5 lines
+- **Structured Hints** (`AOCS-INVARIANT`, `AOCS-FAILS-ON`) — Comments become mechanical constraints
+- **Edit-Locality Guarantees** — One concern per change, one role category per diff
+- **Forbidden Pattern Lists** — Explicit enumeration of never-generate patterns
+- **Agent-First README** (`README.agent.md`) — ≤200 token context bootstrap for system prompts

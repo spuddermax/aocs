@@ -4,7 +4,9 @@
 
 A coding standard optimized for AI agent readability and token efficiency.
 
-**25-40% overall token savings · 40-60% context reduction**
+**Structured contracts that make your codebase machine-readable — and yes, they save tokens too.**
+
+⚠️ **Early Stage** — AOCS v0.8 is a working proposal seeking real-world adoption and feedback. The ideas are proven; the ecosystem is young. Contributions welcome.
 
 🌐 **Live site:** [aocs.myavs.us](https://aocs.myavs.us)
 📦 **Repository:** [github.com/spuddermax/aocs](https://github.com/spuddermax/aocs)
